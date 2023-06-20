@@ -8,23 +8,19 @@ class Featured extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar.large(
-          floating: true,
-          snap: true,
+        SliverAppBar(
+          stretch: true,
           elevation: 0,
-          pinned: true,
+          pinned: false,
           centerTitle: true,
           expandedHeight: 300,
           flexibleSpace: FlexibleSpaceBar(
-            title: const Text("Wally"),
-            centerTitle: true,
-            background: Container(
-              color: const Color.fromARGB(255, 158, 47, 47),
-              child: const Center(
-                child: Text("hello from the App"),
-              ),
-            ),
-          ),
+              centerTitle: true,
+              background: Image.asset(
+                "lib/assets/backgrounds/home.png",
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              )),
         ),
         SliverAppBar(
             elevation: 0,
@@ -37,12 +33,14 @@ class Featured extends StatelessWidget {
                 decoration: BoxDecoration(
                     // color: Colors.white54,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blueGrey)),
+                    border:
+                        Border.all(color: Color.fromARGB(255, 213, 216, 218))),
                 child: const TextField(
                   autocorrect: true,
                   autofillHints: ["Pastel", "Gradients", "Quotes"],
                   decoration: InputDecoration(
                       hintText: "Search for wallpapers",
+                      hintStyle: TextStyle(fontWeight: FontWeight.w200),
                       prefixIcon: Icon(Icons.search),
                       border: InputBorder.none),
                 ),
@@ -50,13 +48,15 @@ class Featured extends StatelessWidget {
             )),
         const SliverAppBar(
           pinned: true,
-          toolbarHeight: 20,
-          flexibleSpace: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 10),
-            child: Text(
-              "Featured",
-              style: TextStyle(fontSize: 20),
-            ),
+          toolbarHeight: 30,
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            collapseMode: CollapseMode.parallax,
+            title: Text("Featured",
+                style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black)),
           ),
         ),
         SliverPadding(
@@ -80,7 +80,7 @@ class Featured extends StatelessWidget {
                   QuiltedGridTile(1, 1),
                 ],
               )),
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 100),
         )
       ],
     );
