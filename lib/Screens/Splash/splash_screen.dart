@@ -1,7 +1,10 @@
 import "dart:async";
+
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:wally/Functions/json_load.dart";
+
 import "package:wally/Screens/Home/home.dart";
 
 class SplashScreen extends StatefulWidget {
@@ -14,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    FileManager().appInitCheck();
     Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (ctx) => const Home()));

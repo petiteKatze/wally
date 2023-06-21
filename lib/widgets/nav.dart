@@ -23,14 +23,6 @@ class NavState extends State<Nav> {
       margin: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.25, vertical: 15),
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 20,
-            offset: const Offset(1, 3), // changes position of shadow
-          ),
-        ],
         border: Border.all(color: Colors.black),
         color: const Color(0xFFA040B0),
         borderRadius: BorderRadius.circular(50),
