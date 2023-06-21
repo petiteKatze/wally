@@ -104,14 +104,14 @@ class _CatagoryState extends State<Catagory> {
                                       cats[index]["type"],
                                       style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 25,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
                                       "${cats[index]["total"]} Wallpapers",
                                       style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 15,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300),
                                     )
                                   ],
@@ -124,13 +124,9 @@ class _CatagoryState extends State<Catagory> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount:
                           MediaQuery.of(context).size.width < 700 ? 2 : 3,
-                      childAspectRatio: MediaQuery.of(context).size.width < 700
-                          ? 9 / 16
-                          : 4 / 3,
-                      mainAxisSpacing:
-                          MediaQuery.of(context).size.width < 700 ? 4 : 15,
-                      crossAxisSpacing:
-                          MediaQuery.of(context).size.width < 700 ? 4 : 15,
+                      childAspectRatio: 4 / 3,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
                     )),
                 padding:
                     const EdgeInsets.only(left: 15, right: 15, bottom: 100),
@@ -236,10 +232,7 @@ class _CatagoryState extends State<Catagory> {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
-                          childAspectRatio:
-                              MediaQuery.of(context).size.width < 700
-                                  ? 9 / 16
-                                  : 4 / 3,
+                          childAspectRatio: 4 / 3,
                           mainAxisSpacing:
                               MediaQuery.of(context).size.width < 700 ? 4 : 15,
                           crossAxisSpacing:

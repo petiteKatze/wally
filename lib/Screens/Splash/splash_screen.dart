@@ -62,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   getStarted() async {
     await FileManager().appInitCheck();
-    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (ctx) => const Home()));
   }

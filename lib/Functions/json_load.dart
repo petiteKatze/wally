@@ -14,11 +14,13 @@ class FileManager {
   // write files after downloading
   Future writeFile(String fileName, String apiPath) async {
     var status = await Permission.storage.request();
+
     if (status == PermissionStatus.denied) {
       exit(1);
     }
     final response =
         await dio.get("https://drab-erin-moose-ring.cyclic.app/$apiPath");
+    print(response.data);
 
     final path = await _directoryPath;
 
@@ -51,12 +53,13 @@ class FileManager {
       Permission.storage.request();
     }
     final shouldDownload = await readFile('initState');
+    print(shouldDownload);
     if (shouldDownload.toString() == "Instance of 'Future<dynamic>'" ||
         shouldDownload == null) {
       //as current state file not present then we need to download all files.
-      writeFile("initState", "/prState");
-      writeFile("catagoryData", "/ctData");
-      writeFile("allWalls", "/all");
+      await writeFile("initState", "/prState");
+      await writeFile("catagoryData", "/ctData");
+      await writeFile("allWalls", "/all");
     } else {
       //also to download if newer version available.
 
@@ -64,9 +67,9 @@ class FileManager {
           await dio.get("https://drab-erin-moose-ring.cyclic.app/version");
 
       if (int.parse(res.toString()) > shouldDownload["version"]) {
-        writeFile("initState", "/prState");
-        writeFile("catagoryData", "/ctData");
-        writeFile("allWalls", "/all");
+        await writeFile("initState", "/prState");
+        await writeFile("catagoryData", "/ctData");
+        await writeFile("allWalls", "/all");
       }
     }
   }
