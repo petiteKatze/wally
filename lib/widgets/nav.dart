@@ -24,7 +24,11 @@ class NavState extends State<Nav> {
           horizontal: MediaQuery.of(context).size.width * 0.25, vertical: 15),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
-        color: const Color(0xFFA040B0),
+        color: widget.activeIndex == 0
+            ? const Color(0xFFA040B0)
+            : widget.activeIndex == 1
+                ? const Color(0xFFAC5A37)
+                : const Color(0xFFAC5A37),
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(

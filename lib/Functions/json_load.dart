@@ -12,12 +12,11 @@ class FileManager {
   }
 
   // write files after downloading
-  void writeFile(String fileName, String apiPath) async {
+  Future writeFile(String fileName, String apiPath) async {
     var status = await Permission.storage.request();
     if (status == PermissionStatus.denied) {
       exit(1);
     }
-
     final response =
         await dio.get("https://drab-erin-moose-ring.cyclic.app/$apiPath");
 
@@ -27,7 +26,6 @@ class FileManager {
         await File('$path/Walldata/$fileName.json').create(recursive: true);
     await newFile.delete();
     await newFile.writeAsBytes(utf8.encode(jsonEncode(response.data)));
-    // print("written");
     readFile(fileName);
   }
 
@@ -47,13 +45,14 @@ class FileManager {
     }
   }
 
-  void appInitCheck() async {
+  Future appInitCheck() async {
     var status = await Permission.storage.request();
     if (status == PermissionStatus.denied) {
       Permission.storage.request();
     }
     final shouldDownload = await readFile('initState');
-    if (shouldDownload.toString() == "Instance of 'Future<dynamic>'") {
+    if (shouldDownload.toString() == "Instance of 'Future<dynamic>'" ||
+        shouldDownload == null) {
       //as current state file not present then we need to download all files.
       writeFile("initState", "/prState");
       writeFile("catagoryData", "/ctData");
@@ -76,5 +75,17 @@ class FileManager {
   Future<List<dynamic>> getFaetured() async {
     final featuredWalls = await readFile("allWalls");
     return featuredWalls;
+  }
+
+  //for fetching catagories
+  Future<List<dynamic>> getCatagories() async {
+    var cat = await readFile("catagoryData");
+    if (cat == null || cat.toString() == "Instance of 'Future<dynamic>'") {
+      await writeFile("catagoryData", "/ctData");
+      cat = await readFile("catagoryData");
+    } else {
+      return cat;
+    }
+    return cat;
   }
 }

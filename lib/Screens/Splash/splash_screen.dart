@@ -1,4 +1,3 @@
-import "dart:async";
 
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -17,11 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    FileManager().appInitCheck();
-    Timer(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (ctx) => const Home()));
-    });
+    getStarted();
     super.initState();
   }
 
@@ -32,7 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
         children: <Widget>[
           SvgPicture.asset(
             "lib/assets/backgrounds/splash_screen.svg",
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
+            width: MediaQuery.of(context).size.width,
           ),
           Center(
               child: Column(
@@ -62,5 +58,12 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
       ),
     );
+  }
+
+  getStarted() async {
+    await FileManager().appInitCheck();
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (ctx) => const Home()));
   }
 }
