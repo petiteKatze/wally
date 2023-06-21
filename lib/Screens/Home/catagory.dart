@@ -39,7 +39,7 @@ class _CatagoryState extends State<Catagory> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              const SliverAppBar(
+              SliverAppBar(
                 pinned: true,
                 toolbarHeight: 70,
                 flexibleSpace: FlexibleSpaceBar(
@@ -56,7 +56,10 @@ class _CatagoryState extends State<Catagory> {
                                 color: Colors.black)),
                         Text("Check out our super aesthetic collections :)",
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize:
+                                    MediaQuery.of(context).size.width < 600
+                                        ? 15
+                                        : 20,
                                 fontWeight: FontWeight.w300,
                                 color: Colors.black))
                       ],

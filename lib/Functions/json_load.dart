@@ -28,7 +28,63 @@ class FileManager {
         await File('$path/Walldata/$fileName.json').create(recursive: true);
     await newFile.delete();
     await newFile.writeAsBytes(utf8.encode(jsonEncode(response.data)));
-    readFile(fileName);
+  }
+
+  Future addToLike(dynamic data) async {
+    final toLike = await isPresent(data["id"]);
+
+    if (toLike == false) {
+      var temp = [];
+      var status = await Permission.storage.request();
+      if (status == PermissionStatus.denied) {
+        exit(1);
+      }
+      final path = await _directoryPath;
+      var filePres = await readFile("likedItems");
+
+      if (filePres == null ||
+          filePres.toString() == "Instance of 'Future<dynamic>'") {
+        var newFile = await File('$path/Walldata/likedItems.json')
+            .create(recursive: true);
+        temp.add(data);
+        await newFile.delete();
+        await newFile.writeAsBytes(utf8.encode(jsonEncode(temp)));
+      } else {
+        filePres.add(data);
+        final newFile = await File('$path/Walldata/likedItems.json');
+        newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
+      }
+    } else {
+      var status = await Permission.storage.request();
+      if (status == PermissionStatus.denied) {
+        exit(1);
+      }
+      final path = await _directoryPath;
+      var filePres = await readFile("likedItems");
+      filePres.removeWhere((ele) => ele["id"] == data["id"]);
+      final newFile = await File('$path/Walldata/likedItems.json');
+      newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
+      print("deleted");
+    }
+  }
+
+  Future<List<dynamic>> readLikes() async {
+    final likes = await readFile("likedItems");
+    if (likes == null) {
+      return [];
+    } else {
+      return likes;
+    }
+  }
+
+  Future<bool> isPresent(int id) async {
+    List<dynamic> likesList = await readLikes();
+    for (var i = 0; i < likesList.length; i++) {
+      if (id == likesList[i]["id"]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // reads file

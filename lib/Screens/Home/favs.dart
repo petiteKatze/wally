@@ -1,7 +1,20 @@
 import "package:flutter/material.dart";
+import "package:wally/Functions/json_load.dart";
 
-class Favs extends StatelessWidget {
+class Favs extends StatefulWidget {
   const Favs({super.key});
+
+  @override
+  State<Favs> createState() => _FavsState();
+}
+
+class _FavsState extends State<Favs> {
+  List<dynamic> walls = [];
+  @override
+  void initState() {
+    getLikes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +36,7 @@ class Favs extends StatelessWidget {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              const SliverAppBar(
+              SliverAppBar(
                 pinned: true,
                 toolbarHeight: 70,
                 flexibleSpace: FlexibleSpaceBar(
@@ -40,7 +53,10 @@ class Favs extends StatelessWidget {
                                 color: Colors.black)),
                         Text("Check out our super aesthetic collections :)",
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize:
+                                    MediaQuery.of(context).size.width < 600
+                                        ? 15
+                                        : 20,
                                 fontWeight: FontWeight.w300,
                                 color: Colors.black))
                       ],
@@ -48,6 +64,12 @@ class Favs extends StatelessWidget {
                   ),
                 ),
               ),
+              SliverToBoxAdapter(
+                child: Text(
+                  walls.toString(),
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
             ],
           )
         : Row(
@@ -93,5 +115,12 @@ class Favs extends StatelessWidget {
               ))
             ],
           );
+  }
+
+  getLikes() async {
+    List<dynamic> data = await FileManager().readLikes();
+    setState(() {
+      walls = data;
+    });
   }
 }

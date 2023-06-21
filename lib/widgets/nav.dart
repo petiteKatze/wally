@@ -28,7 +28,7 @@ class NavState extends State<Nav> {
             ? const Color(0xFFA040B0)
             : widget.activeIndex == 1
                 ? const Color(0xFFAC5A37)
-                : const Color(0xFFAC5A37),
+                : const Color(0xFFAC3753),
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(

@@ -1,6 +1,9 @@
+import "dart:io";
+
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
 
@@ -13,8 +16,10 @@ class Featured extends StatefulWidget {
 
 class _FeaturedState extends State<Featured> {
   List<dynamic> walls = [];
+  List<dynamic> likes = [];
   @override
   void initState() {
+    getLikesList();
     getInfo();
 
     super.initState();
@@ -64,7 +69,7 @@ class _FeaturedState extends State<Featured> {
                       ),
                     ),
                   )),
-              const SliverAppBar(
+              SliverAppBar(
                 pinned: true,
                 toolbarHeight: 70,
                 flexibleSpace: FlexibleSpaceBar(
@@ -81,7 +86,10 @@ class _FeaturedState extends State<Featured> {
                                 color: Colors.black)),
                         Text("Here is our entire collection ✨",
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize:
+                                    MediaQuery.of(context).size.width < 600
+                                        ? 15
+                                        : 20,
                                 fontWeight: FontWeight.w300,
                                 color: Colors.black))
                       ],
@@ -142,18 +150,36 @@ class _FeaturedState extends State<Featured> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      walls[index]["name"],
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                    Flexible(
+                                      child: Text(
+                                        walls[index]["name"],
+                                        maxLines: 2,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Colors.white),
+                                      ),
                                     ),
                                     IconButton(
                                         padding: EdgeInsets.zero,
-                                        onPressed: () {},
-                                        icon: PhosphorIcon(
-                                          PhosphorIcons.regular.heart,
-                                          color: Colors.white,
-                                        ))
+                                        onPressed: () async {
+                                          Vibrate.feedback(
+                                              FeedbackType.success);
+                                          await FileManager()
+                                              .addToLike(walls[index]);
+                                          setState(() {
+                                            getLikesList();
+                                          });
+                                          // await FileManager().readLikes();
+                                        },
+                                        icon: checkPres(index) == false
+                                            ? PhosphorIcon(
+                                                PhosphorIcons.regular.heart,
+                                                color: Colors.white)
+                                            : PhosphorIcon(
+                                                PhosphorIcons.fill.heart,
+                                                color: Colors.white))
                                   ],
                                 ),
                               ))
@@ -285,11 +311,23 @@ class _FeaturedState extends State<Featured> {
                                         ),
                                         IconButton(
                                             padding: EdgeInsets.zero,
-                                            onPressed: () {},
-                                            icon: PhosphorIcon(
-                                              PhosphorIcons.regular.heart,
-                                              color: Colors.white,
-                                            ))
+                                            onPressed: () async {
+                                              Vibrate.feedback(
+                                                  FeedbackType.success);
+                                              await FileManager()
+                                                  .addToLike(walls[index]);
+                                              setState(() {
+                                                getLikesList();
+                                              });
+                                              // await FileManager().readLikes();
+                                            },
+                                            icon: checkPres(index) == false
+                                                ? PhosphorIcon(
+                                                    PhosphorIcons.regular.heart,
+                                                    color: Colors.white)
+                                                : PhosphorIcon(
+                                                    PhosphorIcons.fill.heart,
+                                                    color: Colors.white))
                                       ],
                                     ),
                                   ))
@@ -323,5 +361,22 @@ class _FeaturedState extends State<Featured> {
     setState(() {
       walls = data;
     });
+  }
+
+  getLikesList() async {
+    List<dynamic> dat = await FileManager().readLikes();
+    setState(() {
+      likes = dat;
+    });
+  }
+
+  bool checkPres(int id) {
+    for (var i = 0; i < likes.length; i++) {
+      if (id == likes[i]["id"]) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
