@@ -274,85 +274,106 @@ class _FeaturedState extends State<Featured> {
                         delegate: SliverChildBuilderDelegate(
                           (context, index) => InkWell(
                             onTap: () => {},
-                            child: Stack(children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: ShaderMask(
-                                    shaderCallback: (rect) {
-                                      return const LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.transparent,
-                                          Colors.transparent,
-                                          Color.fromARGB(91, 0, 0, 0)
-                                        ],
-                                      ).createShader(Rect.fromLTRB(0, -140,
-                                          rect.width, rect.height - 20));
-                                    },
-                                    blendMode: BlendMode.darken,
-                                    child: CachedNetworkImage(
-                                      filterQuality: FilterQuality.medium,
-                                      imageUrl: walls[index]["link"],
-                                      imageBuilder: (ctx, imageProvider) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => FullScreen(
+                                              desc: walls[index]["desc"],
+                                              imageLink: walls[index]["link"],
+                                              name: walls[index]["name"],
+                                              tags: walls[index]["catagories"],
+                                              variants: walls[index]
+                                                  ["variants"],
+                                              id: walls[index]["id"],
+                                            )));
+                              },
+                              child: Stack(children: <Widget>[
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: ShaderMask(
+                                      shaderCallback: (rect) {
+                                        return const LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.transparent,
+                                            Color.fromARGB(91, 0, 0, 0)
+                                          ],
+                                        ).createShader(Rect.fromLTRB(0, -140,
+                                            rect.width, rect.height - 20));
+                                      },
+                                      blendMode: BlendMode.darken,
+                                      child: CachedNetworkImage(
+                                        filterQuality: FilterQuality.medium,
+                                        imageUrl: walls[index]["link"],
+                                        imageBuilder: (ctx, imageProvider) =>
+                                            Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      placeholder: (ctx, url) => Container(
-                                        color: Colors.white,
-                                        alignment: Alignment.center,
-                                        child:
-                                            const CupertinoActivityIndicator(),
-                                      ),
-                                    )),
-                              ),
-                              Positioned(
-                                  bottom: 0,
-                                  left: 5,
-                                  right: 0,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          walls[index]["name"],
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                        placeholder: (ctx, url) => Container(
+                                          color: Colors.white,
+                                          alignment: Alignment.center,
+                                          child:
+                                              const CupertinoActivityIndicator(),
                                         ),
-                                        IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () async {
-                                              Vibrate.feedback(
-                                                  FeedbackType.success);
-                                              await FileManager()
-                                                  .addToLike(walls[index]);
-                                              setState(() {
-                                                getLikesList();
-                                              });
-                                              // await FileManager().readLikes();
-                                            },
-                                            icon: checkPres(index) == false
-                                                ? PhosphorIcon(
-                                                    PhosphorIcons.regular.heart,
-                                                    color: Colors.white)
-                                                : PhosphorIcon(
-                                                    PhosphorIcons.fill.heart,
-                                                    color: const Color.fromARGB(
-                                                        255, 217, 130, 228)))
-                                      ],
-                                    ),
-                                  ))
-                            ]),
+                                      )),
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    left: 5,
+                                    right: 0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            walls[index]["name"],
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          IconButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () async {
+                                                Vibrate.feedback(
+                                                    FeedbackType.success);
+                                                await FileManager()
+                                                    .addToLike(walls[index]);
+                                                setState(() {
+                                                  getLikesList();
+                                                });
+                                                // await FileManager().readLikes();
+                                              },
+                                              icon: checkPres(index) == false
+                                                  ? PhosphorIcon(
+                                                      PhosphorIcons
+                                                          .regular.heart,
+                                                      color: Colors.white)
+                                                  : PhosphorIcon(
+                                                      PhosphorIcons.fill.heart,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              217,
+                                                              130,
+                                                              228)))
+                                        ],
+                                      ),
+                                    ))
+                              ]),
+                            ),
                           ),
                           childCount: walls.length,
                         ),

@@ -33,8 +33,9 @@ class FullScreen extends StatefulWidget {
 
 class _FullScreenState extends State<FullScreen> {
   List<dynamic> likes = [];
-  var disImage="";
+  var disImage = "";
   double aniHeight = 50;
+  double aniWidth = 50;
 
   bool hide = true;
   @override
@@ -51,6 +52,10 @@ class _FullScreenState extends State<FullScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        title: Text(
+          widget.name,
+          style: const TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
             onPressed: () {
               Navigator.pushReplacement(
@@ -75,12 +80,257 @@ class _FullScreenState extends State<FullScreen> {
               );
             },
           ),
-          Positioned(
-              bottom: 0,
-              child: AnimatedContainer(
-                  curve: Curves.bounceOut,
-                  duration: const Duration(milliseconds: 500),
-                  decoration: BoxDecoration(
+          MediaQuery.of(context).size.width < 900
+              ? Positioned(
+                  bottom: 0,
+                  child: AnimatedContainer(
+                      curve: Curves.bounceOut,
+                      duration: const Duration(milliseconds: 500),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.2),
+                              blurRadius: 100.0, // soften the shadow
+                              spreadRadius: 30.0, //extend the shadow
+                              offset: const Offset(
+                                0.0,
+                                -2.0,
+                              ),
+                            )
+                          ],
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      width: MediaQuery.of(context).size.width,
+                      height: aniHeight,
+                      child: !hide
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Vibrate.feedback(FeedbackType.success);
+                                        setState(() {
+                                          aniHeight = 50;
+                                          hide = true;
+                                        });
+                                      },
+                                      icon: PhosphorIcon(
+                                          PhosphorIcons.regular.caretDown)),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.7,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.name,
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              widget.desc,
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () async {
+                                            Vibrate.feedback(
+                                                FeedbackType.success);
+                                            await FileManager().addToLike({
+                                              "id": widget.id,
+                                              "name": widget.name,
+                                              "catagories": widget.tags,
+                                              "desc": widget.desc,
+                                              "link": widget.imageLink,
+                                              "variants": widget.variants
+                                            });
+                                            setState(() {
+                                              getLikesList();
+                                            });
+
+                                            // await FileManager().readLikes();
+                                          },
+                                          icon: checkPres(widget.id) == false
+                                              ? PhosphorIcon(
+                                                  PhosphorIcons.regular.heart,
+                                                  color: Colors.red)
+                                              : PhosphorIcon(
+                                                  PhosphorIcons.fill.heart,
+                                                  color: Colors.red))
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      widget.variants.isNotEmpty
+                                          ? Row(
+                                              children: [
+                                                for (var i in widget.variants)
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 8),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          disImage =
+                                                              i.values.first;
+                                                          Vibrate.feedback(
+                                                              FeedbackType
+                                                                  .success);
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black54),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: Color(int.parse(
+                                                              'FF${i.keys.first}',
+                                                              radix: 16)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                              ],
+                                            )
+                                          : const Text("No variants available"),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: Row(
+                                          children: [
+                                            for (var j in widget.tags)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 4),
+                                                child: Text('#$j'),
+                                              )
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (ctx) =>
+                                                  CupertinoAlertDialog(
+                                                    title: const Text(
+                                                        "Set Wallpaper"),
+                                                    content: const Text(
+                                                        "You can chose where to set the wallpaper,The wallpaper is automatically downloaded as well"),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: const Text(
+                                                            "Home Screen"),
+                                                        onPressed: () async {
+                                                          var file =
+                                                              await DefaultCacheManager()
+                                                                  .getSingleFile(
+                                                                      disImage);
+
+                                                          try {
+                                                            await AsyncWallpaper
+                                                                    .setWallpaperFromFileNative(
+                                                              goToHome: true,
+                                                              filePath:
+                                                                  file.path,
+                                                              toastDetails:
+                                                                  ToastDetails
+                                                                      .success(),
+                                                              errorToastDetails:
+                                                                  ToastDetails
+                                                                      .error(),
+                                                            )
+                                                                ? 'Wallpaper set'
+                                                                : 'Failed to get wallpaper.';
+                                                          } on PlatformException {}
+                                                        },
+                                                      ),
+                                                      const CupertinoDialogAction(
+                                                          child: Text(
+                                                              "Lock SCreen")),
+                                                      const CupertinoDialogAction(
+                                                          child: Text("Both")),
+                                                    ],
+                                                  ));
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: Colors.black),
+                                          child: const Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 10),
+                                              child: Text(
+                                                "Set Wallpaper",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: IconButton(
+                                  onPressed: () {
+                                    Vibrate.feedback(FeedbackType.success);
+                                    setState(() {
+                                      aniHeight = 300;
+                                      hide = false;
+                                    });
+                                  },
+                                  icon: PhosphorIcon(
+                                      PhosphorIcons.regular.caretUp)),
+                            )))
+              : Positioned(
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.bounceOut,
+                    width: aniWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                           color: const Color.fromARGB(255, 0, 0, 0)
@@ -93,218 +343,217 @@ class _FullScreenState extends State<FullScreen> {
                           ),
                         )
                       ],
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20))),
-                  width: MediaQuery.of(context).size.width,
-                  height: aniHeight,
-                  child: !hide
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
+                    ),
+                    child: hide
+                        ? Center(
+                            child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    hide = false;
+                                    aniWidth = 400;
+                                  });
+                                },
+                                icon: PhosphorIcon(
+                                    PhosphorIcons.regular.caretLeft)),
+                          )
+                        : Expanded(
+                            child: Row(
                             children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Vibrate.feedback(FeedbackType.success);
-                                    setState(() {
-                                      aniHeight = 50;
-                                      hide = true;
-                                    });
-                                  },
-                                  icon: PhosphorIcon(
-                                      PhosphorIcons.regular.caretDown)),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    child: Column(
+                              SizedBox(
+                                width: 50,
+                                height: MediaQuery.of(context).size.height,
+                                child: Center(
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          hide = true;
+                                          aniWidth = 50;
+                                        });
+                                      },
+                                      icon: PhosphorIcon(
+                                          PhosphorIcons.regular.caretRight)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 340,
+                                height: MediaQuery.of(context).size.height,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 40),
+                                  child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           widget.name,
                                           style: const TextStyle(
-                                              fontSize: 25,
+                                              fontSize: 30,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(
-                                          widget.desc,
-                                          style: const TextStyle(fontSize: 12),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () async {
-                                        Vibrate.feedback(FeedbackType.success);
-                                        await FileManager().addToLike({
-                                          "id": widget.id,
-                                          "name": widget.name,
-                                          "catagories": widget.tags,
-                                          "desc": widget.desc,
-                                          "link": widget.imageLink,
-                                          "varaints": widget.variants
-                                        });
-                                        setState(() {
-                                          getLikesList();
-                                        });
-
-                                        // await FileManager().readLikes();
-                                      },
-                                      icon: checkPres(widget.id) == false
-                                          ? PhosphorIcon(
-                                              PhosphorIcons.regular.heart,
-                                              color: Colors.red)
-                                          : PhosphorIcon(
-                                              PhosphorIcons.fill.heart,
-                                              color: Colors.red))
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  widget.variants.isNotEmpty
-                                      ? Row(
-                                          children: [
-                                            for (var i in widget.variants)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      disImage = i.values.first;
-                                                      Vibrate.feedback(
-                                                          FeedbackType.success);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: 30,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color:
-                                                              Colors.black54),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      color: Color(int.parse(
-                                                          'FF${i.keys.first}',
-                                                          radix: 16)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        )
-                                      : const Text("No variants available"),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: Row(
-                                      children: [
-                                        for (var j in widget.tags)
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 4),
-                                            child: Text('#$j'),
-                                          )
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (ctx) =>
-                                              CupertinoAlertDialog(
-                                                title: const Text("Set Wallpaper"),
-                                                content: const Text(
-                                                    "You can chose where to set the wallpaper,The wallpaper is automatically downloaded as well"),
-                                                actions: [
-                                                  CupertinoDialogAction(
-                                                    child: const Text("Home Screen"),
-                                                    onPressed: () async {
-                                                      var file =
-                                                          await DefaultCacheManager()
-                                                              .getSingleFile(
-                                                                  disImage);
-                                                    
-                                                      try {
-                                                        await AsyncWallpaper
-                                                                .setWallpaperFromFileNative(
-                                                          goToHome: true,
-                                                        
-                                                          filePath: file.path,
-                                                          toastDetails:
-                                                              ToastDetails
-                                                                  .success(),
-                                                          errorToastDetails:
-                                                              ToastDetails
-                                                                  .error(),
-                                                        )
-                                                            ? 'Wallpaper set'
-                                                            : 'Failed to get wallpaper.';
-                                                      } on PlatformException {
-                                                       
-                                                      }
-                                                    },
-                                                  ),
-                                                  const CupertinoDialogAction(
-                                                      child:
-                                                          Text("Lock SCreen")),
-                                                  const CupertinoDialogAction(
-                                                      child: Text("Both")),
+                                        Text(widget.desc),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Text("Variants"),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        widget.variants.isNotEmpty
+                                            ? Column(
+                                                children: [
+                                                  for (var i in widget.variants)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 15),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            disImage =
+                                                                i.values.first;
+                                                            Vibrate.feedback(
+                                                                FeedbackType
+                                                                    .success);
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 30,
+                                                              width: 30,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .black54),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                color: Color(
+                                                                    int.parse(
+                                                                        'FF${i.keys.first}',
+                                                                        radix:
+                                                                            16)),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Text(
+                                                                ' #${i.keys.first.toString()}')
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
                                                 ],
-                                              ));
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Colors.black),
-                                      child: const Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          child: Text(
-                                            "Set Wallpaper",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                              )
+                                            : const Text(
+                                                "No variants available for this wallpaper"),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Row(
+                                            children: [
+                                              for (var j in widget.tags)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 4),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: const Color
+                                                                  .fromARGB(
+                                                              30, 155, 39, 176),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4)),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Center(
+                                                            child: Text('#$j')),
+                                                      )),
+                                                )
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    CupertinoAlertDialog(
+                                                      title: const Text(
+                                                          "Set Wallpaper"),
+                                                      content: const Text(
+                                                          "You can chose where to set the wallpaper,The wallpaper is automatically downloaded as well"),
+                                                      actions: [
+                                                        CupertinoDialogAction(
+                                                          child: const Text(
+                                                              "Home Screen"),
+                                                          onPressed: () async {
+                                                            var file =
+                                                                await DefaultCacheManager()
+                                                                    .getSingleFile(
+                                                                        disImage);
+
+                                                            try {
+                                                              await AsyncWallpaper
+                                                                      .setWallpaperFromFileNative(
+                                                                goToHome: true,
+                                                                filePath:
+                                                                    file.path,
+                                                                toastDetails:
+                                                                    ToastDetails
+                                                                        .success(),
+                                                                errorToastDetails:
+                                                                    ToastDetails
+                                                                        .error(),
+                                                              )
+                                                                  ? 'Wallpaper set'
+                                                                  : 'Failed to get wallpaper.';
+                                                            } on PlatformException {}
+                                                          },
+                                                        ),
+                                                        CupertinoDialogAction(
+                                                            onPressed: () {},
+                                                            child: const Text(
+                                                                "Download ")),
+                                                      ],
+                                                    ));
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: Colors.black),
+                                            child: const Center(
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10),
+                                                child: Text(
+                                                  "Set Wallpaper / Download",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ]),
+                                ),
                               )
                             ],
-                          ),
-                        )
-                      : Center(
-                          child: IconButton(
-                              onPressed: () {
-                                Vibrate.feedback(FeedbackType.success);
-                                setState(() {
-                                  aniHeight = 300;
-                                  hide = false;
-                                });
-                              },
-                              icon:
-                                  PhosphorIcon(PhosphorIcons.regular.caretUp)),
-                        )))
+                          )),
+                  ))
         ],
       ),
     );
