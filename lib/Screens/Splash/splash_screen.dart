@@ -1,4 +1,3 @@
-
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -62,6 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   getStarted() async {
     await FileManager().appInitCheck();
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (ctx) => const Home()));
   }

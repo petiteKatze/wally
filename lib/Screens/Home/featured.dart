@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
+import "package:wally/Screens/full_wall.dart";
 
 class Featured extends StatefulWidget {
   const Featured({super.key});
@@ -113,87 +114,103 @@ class _FeaturedState extends State<Featured> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) => InkWell(
                         onTap: () => {},
-                        child: Stack(children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: ShaderMask(
-                                shaderCallback: (rect) {
-                                  return const LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      Color.fromARGB(91, 0, 0, 0)
+                        child: InkWell(
+                          onTap: () => {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) => FullScreen(
+                                          desc: walls[index]["desc"],
+                                          imageLink: walls[index]["link"],
+                                          name: walls[index]["name"],
+                                          tags: walls[index]["catagories"],
+                                          variants: walls[index]["variants"],
+                                          id: walls[index]["id"],
+                                        )))
+                          },
+                          child: Stack(children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: ShaderMask(
+                                  shaderCallback: (rect) {
+                                    return const LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.transparent,
+                                        Color.fromARGB(91, 0, 0, 0)
+                                      ],
+                                    ).createShader(Rect.fromLTRB(
+                                        0, -140, rect.width, rect.height - 20));
+                                  },
+                                  blendMode: BlendMode.darken,
+                                  child: CachedNetworkImage(
+                                    filterQuality: FilterQuality.medium,
+                                    imageUrl: walls[index]["link"],
+                                    imageBuilder: (ctx, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    placeholder: (ctx, url) => Container(
+                                      color: Colors.white,
+                                      alignment: Alignment.center,
+                                      child: const CupertinoActivityIndicator(),
+                                    ),
+                                  )),
+                            ),
+                            Positioned(
+                                bottom: 0,
+                                left: 5,
+                                right: 0,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          walls[index]["name"],
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () async {
+                                            Vibrate.feedback(
+                                                FeedbackType.success);
+                                            await FileManager()
+                                                .addToLike(walls[index]);
+                                            setState(() {
+                                              getLikesList();
+                                            });
+                                          },
+                                          icon: checkPres(index) == false
+                                              ? PhosphorIcon(
+                                                  PhosphorIcons.regular.heart,
+                                                  color: Colors.white)
+                                              : PhosphorIcon(
+                                                  PhosphorIcons.fill.heart,
+                                                  color:
+                                                      const Color(0xFFDCB3E9)))
                                     ],
-                                  ).createShader(Rect.fromLTRB(
-                                      0, -140, rect.width, rect.height - 20));
-                                },
-                                blendMode: BlendMode.darken,
-                                child: CachedNetworkImage(
-                                  filterQuality: FilterQuality.medium,
-                                  imageUrl: walls[index]["link"],
-                                  imageBuilder: (ctx, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
                                   ),
-                                  placeholder: (ctx, url) => Container(
-                                    color: Colors.white,
-                                    alignment: Alignment.center,
-                                    child: const CupertinoActivityIndicator(),
-                                  ),
-                                )),
-                          ),
-                          Positioned(
-                              bottom: 0,
-                              left: 5,
-                              right: 0,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        walls[index]["name"],
-                                        maxLines: 2,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    IconButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () async {
-                                          Vibrate.feedback(
-                                              FeedbackType.success);
-                                          await FileManager()
-                                              .addToLike(walls[index]);
-                                          setState(() {
-                                            getLikesList();
-                                          });
-                                        },
-                                        icon: checkPres(index) == false
-                                            ? PhosphorIcon(
-                                                PhosphorIcons.regular.heart,
-                                                color: Colors.white)
-                                            : PhosphorIcon(
-                                                PhosphorIcons.fill.heart,
-                                                color: const Color(0xFFDCB3E9)))
-                                  ],
-                                ),
-                              ))
-                        ]),
+                                ))
+                          ]),
+                        ),
                       ),
                       childCount: walls.length,
                     ),

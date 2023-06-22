@@ -46,7 +46,7 @@ class _FavsState extends State<Favs> {
                     // color: Colors.red,
                     height: MediaQuery.of(context).size.width > 600
                         ? MediaQuery.of(context).size.height * 0.05
-                        : MediaQuery.of(context).size.width * 0.1,
+                        : MediaQuery.of(context).size.height * 0.07,
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,8 +312,9 @@ class _FavsState extends State<Favs> {
                   SliverPadding(
                     padding: const EdgeInsets.only(bottom: 80),
                     sliver: SliverGrid.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 20 / 9, crossAxisCount: 1),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: 20 / 9, crossAxisCount: 1),
                       itemBuilder: (ctx, idx) => Padding(
                         padding: const EdgeInsets.only(
                             left: 15, right: 15, bottom: 30),
