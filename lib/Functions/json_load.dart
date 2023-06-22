@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,7 +21,9 @@ class FileManager {
     }
     final response =
         await dio.get("https://drab-erin-moose-ring.cyclic.app/$apiPath");
-    print(response.data);
+    if (kDebugMode) {
+      print(response.data);
+    }
 
     final path = await _directoryPath;
 
@@ -64,7 +67,9 @@ class FileManager {
       filePres.removeWhere((ele) => ele["id"] == data["id"]);
       final newFile = await File('$path/Walldata/likedItems.json');
       newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
-      print("deleted");
+      if (kDebugMode) {
+        print("deleted");
+      }
     }
   }
 
@@ -109,7 +114,9 @@ class FileManager {
       Permission.storage.request();
     }
     final shouldDownload = await readFile('initState');
-    print(shouldDownload);
+    if (kDebugMode) {
+      print(shouldDownload);
+    }
     if (shouldDownload.toString() == "Instance of 'Future<dynamic>'" ||
         shouldDownload == null) {
       //as current state file not present then we need to download all files.

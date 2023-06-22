@@ -46,10 +46,10 @@ class _CatagoryState extends State<Catagory> {
                   centerTitle: true,
                   collapseMode: CollapseMode.parallax,
                   title: Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Column(
                       children: [
-                        Text("Wally Collections",
+                        const Text("Wally Collections",
                             style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w700,
@@ -236,10 +236,8 @@ class _CatagoryState extends State<Catagory> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           childAspectRatio: 4 / 3,
-                          mainAxisSpacing:
-                              MediaQuery.of(context).size.width < 700 ? 4 : 15,
-                          crossAxisSpacing:
-                              MediaQuery.of(context).size.width < 700 ? 4 : 15,
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
                         )),
                     padding:
                         const EdgeInsets.only(left: 15, right: 15, bottom: 100),

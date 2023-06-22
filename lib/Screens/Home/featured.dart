@@ -1,5 +1,3 @@
-import "dart:io";
-
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -48,50 +46,63 @@ class _FeaturedState extends State<Featured> {
               SliverAppBar(
                   elevation: 0,
                   pinned: false,
-                  bottom: const PreferredSize(
-                      preferredSize: Size.fromHeight(-10), child: SizedBox()),
-                  flexibleSpace: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          // color: Colors.white54,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 213, 216, 218))),
-                      child: const TextField(
-                        autocorrect: true,
-                        autofillHints: ["Pastel", "Gradients", "Quotes"],
-                        decoration: InputDecoration(
-                            hintText: "Search for wallpapers",
-                            hintStyle: TextStyle(fontWeight: FontWeight.w200),
-                            prefixIcon: Icon(Icons.search),
-                            border: InputBorder.none),
+                  toolbarHeight: 80,
+                  floating: true,
+                  flexibleSpace: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {}, icon: const Icon(Icons.menu)),
+                          Container(
+                            height: 45,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                                // color: Colors.white54,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 213, 216, 218))),
+                            child: const TextField(
+                              autocorrect: true,
+                              autofillHints: ["Pastel", "Gradients", "Quotes"],
+                              decoration: InputDecoration(
+                                  hintText: "Search for wallpapers",
+                                  hintStyle:
+                                      TextStyle(fontWeight: FontWeight.w200),
+                                  prefixIcon: Icon(Icons.search),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   )),
-              SliverAppBar(
-                pinned: true,
-                toolbarHeight: 70,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  collapseMode: CollapseMode.parallax,
-                  title: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Column(
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                sliver: SliverToBoxAdapter(
+                  child: SizedBox(
+                    // color: Colors.red,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Wally picks",
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black)),
-                        Text("Here is our entire collection ✨",
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width < 600
-                                        ? 15
-                                        : 20,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black))
+                        Text(
+                          "Wally",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Explore the latest and exclusive wallpapers from Wally ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black87),
+                        )
                       ],
                     ),
                   ),
@@ -171,7 +182,6 @@ class _FeaturedState extends State<Featured> {
                                           setState(() {
                                             getLikesList();
                                           });
-                                          // await FileManager().readLikes();
                                         },
                                         icon: checkPres(index) == false
                                             ? PhosphorIcon(
@@ -179,7 +189,7 @@ class _FeaturedState extends State<Featured> {
                                                 color: Colors.white)
                                             : PhosphorIcon(
                                                 PhosphorIcons.fill.heart,
-                                                color: Colors.white))
+                                                color: const Color(0xFFDCB3E9)))
                                   ],
                                 ),
                               ))
@@ -218,13 +228,6 @@ class _FeaturedState extends State<Featured> {
                 physics: const BouncingScrollPhysics(),
                 slivers: [
                   const SliverAppBar(
-                    // leading: Padding(
-                    //   padding: const EdgeInsets.only(left: 5, bottom: 15),
-                    //   child: Container(
-                    //     color: const Color(0xFFA040B0),
-                    //     height: 40,
-                    //   ),
-                    // ),
                     floating: true,
                     toolbarHeight: 82,
                     flexibleSpace: FlexibleSpaceBar(
@@ -327,7 +330,8 @@ class _FeaturedState extends State<Featured> {
                                                     color: Colors.white)
                                                 : PhosphorIcon(
                                                     PhosphorIcons.fill.heart,
-                                                    color: Colors.white))
+                                                    color: const Color.fromARGB(
+                                                        255, 217, 130, 228)))
                                       ],
                                     ),
                                   ))
