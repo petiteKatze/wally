@@ -54,11 +54,9 @@ class _FeaturedState extends State<Featured> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Row(
                         children: [
-                          IconButton(
-                              onPressed: () {}, icon: const Icon(Icons.menu)),
                           Container(
                             height: 45,
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            width: MediaQuery.of(context).size.width - 20,
                             decoration: BoxDecoration(
                                 // color: Colors.white54,
                                 borderRadius: BorderRadius.circular(20),
@@ -85,7 +83,7 @@ class _FeaturedState extends State<Featured> {
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
                     // color: Colors.red,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.06,
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

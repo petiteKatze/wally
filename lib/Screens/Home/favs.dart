@@ -1,7 +1,10 @@
 import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
+import "package:wally/Screens/full_wall.dart";
 
 class Favs extends StatefulWidget {
   const Favs({super.key});
@@ -70,199 +73,118 @@ class _FavsState extends State<Favs> {
                   ),
                 ),
               ),
-              SliverPadding(
-                padding: const EdgeInsets.only(bottom: 80),
-                sliver: SliverGrid.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: MediaQuery.of(context).size.width > 600
-                          ? 5 / 3
-                          : 4 / 3,
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 600 ? 2 : 1),
-                  itemBuilder: (ctx, idx) => Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 30),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                blurRadius: 20.0, // soften the shadow
-                                spreadRadius: 2.0, //extend the shadow
-                                offset: const Offset(
-                                  2.0,
-                                  2.0,
-                                ),
-                              )
-                            ],
-                            color: const Color.fromARGB(255, 237, 236, 230),
-                            borderRadius: BorderRadius.circular(8)),
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
+              walls.isNotEmpty
+                  ? SliverPadding(
+                      padding: const EdgeInsets.only(bottom: 80),
+                      sliver: SliverGrid.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: 3 / 4, crossAxisCount: 3),
+                        itemBuilder: (ctx, idx) => Padding(
+                          padding: const EdgeInsets.only(
+                              left: 15, right: 15, bottom: 30),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => FullScreen(
+                                            desc: walls[idx]["desc"],
+                                            imageLink: walls[idx]["link"],
+                                            name: walls[idx]["name"],
+                                            tags: walls[idx]["catagories"],
+                                            variants: walls[idx]["variants"],
+                                            id: walls[idx]["id"],
+                                          )));
+                            },
+                            child: Stack(children: <Widget>[
                               ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      width:
-                                          MediaQuery.of(context).size.width <
-                                                  600
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.35
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.2,
-                                      imageUrl: walls[idx]["link"])),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      walls[idx]["name"],
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width <
-                                              600
-                                          ? MediaQuery.of(context).size.width *
-                                              0.5
-                                          : MediaQuery.of(context).size.width *
-                                              0.2,
-                                      child: Text(
-                                        walls[idx]["desc"].toString(),
-                                        maxLines:
-                                            MediaQuery.of(context).size.width <
-                                                    600
-                                                ? 3
-                                                : 6,
-                                        softWrap: true,
-                                        style: const TextStyle(
-                                            color: Colors.black87,
-                                            height: 1,
-                                            fontWeight: FontWeight.w300,
-                                            overflow: TextOverflow.ellipsis),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    //variants
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    walls[idx]["variants"].length > 0
-                                        ? const Text("Variants")
-                                        : const SizedBox(),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    walls[idx]["variants"].length > 0
-                                        ? Row(
-                                            children: [
-                                              for (var i in walls[idx]
-                                                  ["variants"])
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 5),
-                                                  child: Container(
-                                                    height: 25,
-                                                    width: 25,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color:
-                                                              Colors.black54),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      color: Color(int.parse(
-                                                          'FF${i.keys.first}',
-                                                          radix: 16)),
-                                                    ),
-                                                  ),
-                                                )
-                                            ],
-                                          )
-                                        : const SizedBox(),
-                                    const Spacer(),
-
-                                    const Text(
-                                      "Actions",
-                                      style: TextStyle(color: Colors.black87),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(children: [
-                                      Container(
+                                borderRadius: BorderRadius.circular(5),
+                                child: ShaderMask(
+                                    shaderCallback: (rect) {
+                                      return const LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.transparent,
+                                          Color.fromARGB(91, 0, 0, 0)
+                                        ],
+                                      ).createShader(Rect.fromLTRB(0, -140,
+                                          rect.width, rect.height - 20));
+                                    },
+                                    blendMode: BlendMode.darken,
+                                    child: CachedNetworkImage(
+                                      filterQuality: FilterQuality.medium,
+                                      imageUrl: walls[idx]["link"],
+                                      imageBuilder: (ctx, imageProvider) =>
+                                          Container(
                                         decoration: BoxDecoration(
-                                            color: Colors.black12,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.black45)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: PhosphorIcon(
-                                            PhosphorIcons
-                                                .duotone.downloadSimple,
-                                            size: 20,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                      placeholder: (ctx, url) => Container(
+                                        color: Colors.white,
+                                        alignment: Alignment.center,
+                                        child:
+                                            const CupertinoActivityIndicator(),
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.black12,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.black45)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: PhosphorIcon(
-                                            PhosphorIcons.duotone.shareNetwork,
-                                            size: 20,
-                                          ),
+                                    )),
+                              ),
+                              Positioned(
+                                  bottom: 0,
+                                  left: 5,
+                                  right: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          walls[idx]["name"],
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.black12,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.black45)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: PhosphorIcon(
-                                            PhosphorIcons
-                                                .duotone.caretCircleRight,
-                                            size: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ])
-                                  ],
-                                ),
-                              )
-                            ],
+                                        IconButton(
+                                            padding: EdgeInsets.zero,
+                                            onPressed: () async {
+                                              Vibrate.feedback(
+                                                  FeedbackType.success);
+                                              await FileManager()
+                                                  .addToLike(walls[idx]);
+                                              setState(() {
+                                                getLikes();
+                                              });
+                                              // await FileManager().readLikes();
+                                            },
+                                            icon: PhosphorIcon(
+                                                PhosphorIcons.regular.xCircle,
+                                                color: Colors.white))
+                                      ],
+                                    ),
+                                  ))
+                            ]),
                           ),
-                        )),
-                  ),
-                  itemCount: walls.length,
-                ),
-              ),
+                        ),
+                        itemCount: walls.length,
+                      ),
+                    )
+                  : SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: const Center(
+                          child: Text(
+                              "You haven't added any wallpapers to your favorites"),
+                        ),
+                      ),
+                    )
             ],
           )
         : Row(
@@ -309,196 +231,127 @@ class _FavsState extends State<Favs> {
                       ),
                     ),
                   ),
-                  SliverPadding(
-                    padding: const EdgeInsets.only(bottom: 80),
-                    sliver: SliverGrid.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 20 / 9, crossAxisCount: 1),
-                      itemBuilder: (ctx, idx) => Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15, right: 15, bottom: 30),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    blurRadius: 20.0, // soften the shadow
-                                    spreadRadius: 2.0, //extend the shadow
-                                    offset: const Offset(
-                                      2.0,
-                                      2.0,
-                                    ),
-                                  )
-                                ],
-                                color: const Color.fromARGB(255, 237, 236, 230),
-                                borderRadius: BorderRadius.circular(8)),
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
+                  walls.isNotEmpty
+                      ? SliverPadding(
+                          padding: const EdgeInsets.only(bottom: 80),
+                          sliver: SliverGrid.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: 3 / 4, crossAxisCount: 3),
+                            itemBuilder: (ctx, idx) => Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 15, bottom: 30),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (ctx) => FullScreen(
+                                                desc: walls[idx]["desc"],
+                                                imageLink: walls[idx]["link"],
+                                                name: walls[idx]["name"],
+                                                tags: walls[idx]["catagories"],
+                                                variants: walls[idx]
+                                                    ["variants"],
+                                                id: walls[idx]["id"],
+                                              )));
+                                },
+                                child: Stack(children: <Widget>[
                                   ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: CachedNetworkImage(
-                                          fit: BoxFit.cover,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          imageUrl: walls[idx]["link"])),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          walls[idx]["name"],
-                                          style: const TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          child: Text(
-                                            walls[idx]["desc"].toString(),
-                                            maxLines: MediaQuery.of(context)
-                                                        .size
-                                                        .width <
-                                                    600
-                                                ? 3
-                                                : 6,
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                color: Colors.black87,
-                                                height: 1,
-                                                fontWeight: FontWeight.w300,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                        //variants
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        walls[idx]["variants"].length > 0
-                                            ? const Text("Variants")
-                                            : const SizedBox(),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        walls[idx]["variants"].length > 0
-                                            ? Row(
-                                                children: [
-                                                  for (var i in walls[idx]
-                                                      ["variants"])
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 5),
-                                                      child: Container(
-                                                        height: 25,
-                                                        width: 25,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              color: Colors
-                                                                  .black54),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: Color(int.parse(
-                                                              'FF${i.keys.first}',
-                                                              radix: 16)),
-                                                        ),
-                                                      ),
-                                                    )
-                                                ],
-                                              )
-                                            : const SizedBox(),
-                                        const Spacer(),
-
-                                        const Text(
-                                          "Actions",
-                                          style:
-                                              TextStyle(color: Colors.black87),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(children: [
-                                          Container(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: ShaderMask(
+                                        shaderCallback: (rect) {
+                                          return const LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent,
+                                              Color.fromARGB(91, 0, 0, 0)
+                                            ],
+                                          ).createShader(Rect.fromLTRB(0, -140,
+                                              rect.width, rect.height - 20));
+                                        },
+                                        blendMode: BlendMode.darken,
+                                        child: CachedNetworkImage(
+                                          filterQuality: FilterQuality.medium,
+                                          imageUrl: walls[idx]["link"],
+                                          imageBuilder: (ctx, imageProvider) =>
+                                              Container(
                                             decoration: BoxDecoration(
-                                                color: Colors.black12,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black45)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: PhosphorIcon(
-                                                PhosphorIcons
-                                                    .duotone.downloadSimple,
-                                                size: 20,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            width: 10,
+                                          placeholder: (ctx, url) => Container(
+                                            color: Colors.white,
+                                            alignment: Alignment.center,
+                                            child:
+                                                const CupertinoActivityIndicator(),
                                           ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.black12,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black45)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: PhosphorIcon(
-                                                PhosphorIcons
-                                                    .duotone.shareNetwork,
-                                                size: 20,
-                                              ),
+                                        )),
+                                  ),
+                                  Positioned(
+                                      bottom: 0,
+                                      left: 5,
+                                      right: 0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              walls[idx]["name"],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.black12,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black45)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: PhosphorIcon(
-                                                PhosphorIcons
-                                                    .duotone.caretCircleRight,
-                                                size: 20,
-                                              ),
-                                            ),
-                                          ),
-                                        ])
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                            IconButton(
+                                                padding: EdgeInsets.zero,
+                                                onPressed: () async {
+                                                  Vibrate.feedback(
+                                                      FeedbackType.success);
+                                                  await FileManager()
+                                                      .addToLike(walls[idx]);
+                                                  setState(() {
+                                                    getLikes();
+                                                  });
+                                                  // await FileManager().readLikes();
+                                                },
+                                                icon: checkPres(idx) == false
+                                                    ? PhosphorIcon(
+                                                        PhosphorIcons
+                                                            .regular.heart,
+                                                        color: Colors.white)
+                                                    : PhosphorIcon(
+                                                        PhosphorIcons
+                                                            .fill.heart,
+                                                        color: const Color
+                                                                .fromARGB(255,
+                                                            217, 130, 228)))
+                                          ],
+                                        ),
+                                      ))
+                                ]),
                               ),
-                            )),
-                      ),
-                      itemCount: walls.length,
-                    ),
-                  ),
+                            ),
+                            itemCount: walls.length,
+                          ),
+                        )
+                      : SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            child: const Center(
+                              child: Text(
+                                  "You haven't added any wallpapers to your favorites"),
+                            ),
+                          ),
+                        )
                 ],
               ))
             ],
@@ -510,5 +363,15 @@ class _FavsState extends State<Favs> {
     setState(() {
       walls = data;
     });
+  }
+
+  bool checkPres(int id) {
+    for (var i = 0; i < walls.length; i++) {
+      if (id == walls[i]["id"]) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
