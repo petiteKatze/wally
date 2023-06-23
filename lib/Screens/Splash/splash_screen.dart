@@ -1,6 +1,6 @@
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:wally/Functions/json_load.dart";
 
 import "package:wally/Screens/Home/home.dart";
@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 : "lib/assets/backgrounds/wideSplas.svg",
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
           ),
           Opacity(
             opacity: 0.4,
@@ -54,10 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
               const SizedBox(
                 height: 20,
               ),
-              const CupertinoActivityIndicator(
+              LoadingAnimationWidget.inkDrop(
+                size: 20,
                 color: Colors.white,
-                radius: 15,
-              )
+              ),
             ],
           )),
           Positioned(

@@ -1,7 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
+import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 
 import "../Functions/json_load.dart";
@@ -28,6 +28,7 @@ class _ColState extends State<Col> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: const GlobalObjectKey("Catagory resulyts"),
         appBar: AppBar(
           title: Text(widget.type),
         ),
@@ -43,6 +44,7 @@ class _ColState extends State<Col> {
                           MediaQuery.of(context).size.width < 600 ? 2 : 3),
                   itemBuilder: (ctx, index) {
                     return InkWell(
+                      key: GlobalObjectKey('$index+ColumnCatagoryResults'),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -87,10 +89,13 @@ class _ColState extends State<Col> {
                                   ),
                                 ),
                                 placeholder: (ctx, url) => Container(
-                                  color: Colors.white,
-                                  alignment: Alignment.center,
-                                  child: const CupertinoActivityIndicator(),
-                                ),
+                                    color: Colors.white,
+                                    alignment: Alignment.center,
+                                    child:
+                                        LoadingAnimationWidget.discreteCircle(
+                                      size: 20,
+                                      color: Colors.white,
+                                    )),
                               )),
                         ),
                         Positioned(

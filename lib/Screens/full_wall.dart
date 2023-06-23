@@ -203,10 +203,10 @@ class _FullScreenState extends State<FullScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             vertical: 5),
-                                        child: const Text(
+                                        child: Text(
                                           "Variants",
                                           textAlign: TextAlign.start,
                                         ),

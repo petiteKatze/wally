@@ -1,6 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:wally/Screens/col_walls.dart";
 
 import "../../Functions/json_load.dart";
@@ -103,7 +103,8 @@ class _CatagoryState extends State<Catagory> {
                               placeholder: (ctx, url) => Container(
                                 color: Colors.white,
                                 alignment: Alignment.center,
-                                child: const CupertinoActivityIndicator(),
+                                child: LoadingAnimationWidget.discreteCircle(
+                                    size: 20, color: Colors.white),
                               ),
                             ),
                             Positioned(
@@ -226,10 +227,11 @@ class _CatagoryState extends State<Catagory> {
                                     ),
                                   ),
                                   placeholder: (ctx, url) => Container(
-                                    color: Colors.white,
-                                    alignment: Alignment.center,
-                                    child: const CupertinoActivityIndicator(),
-                                  ),
+                                      color: Colors.white,
+                                      alignment: Alignment.center,
+                                      child:
+                                          LoadingAnimationWidget.discreteCircle(
+                                              size: 20, color: Colors.white)),
                                 ),
                                 Positioned(
                                     bottom: 0,

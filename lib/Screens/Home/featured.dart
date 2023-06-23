@@ -1,7 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
+import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
 import "package:wally/Screens/full_wall.dart";
@@ -29,8 +29,12 @@ class _FeaturedState extends State<Featured> {
   Widget build(BuildContext context) {
     return MediaQuery.of(context).size.width < 900
         ? CustomScrollView(
+            key: const GlobalObjectKey(
+              "home",
+            ),
             slivers: [
               SliverAppBar(
+                key: const GlobalObjectKey("Sliver App Bar home"),
                 stretch: true,
                 elevation: 0,
                 pinned: false,
@@ -38,6 +42,7 @@ class _FeaturedState extends State<Featured> {
                 expandedHeight:
                     MediaQuery.of(context).size.width > 700 ? 600 : 300,
                 flexibleSpace: FlexibleSpaceBar(
+                    key: const GlobalObjectKey("Home top background"),
                     centerTitle: true,
                     background: Image.asset(
                       "lib/assets/backgrounds/home.png",
@@ -45,47 +50,14 @@ class _FeaturedState extends State<Featured> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              // SliverAppBar(
-              //     elevation: 0,
-              //     pinned: false,
-              //     toolbarHeight: 80,
-              //     floating: true,
-              //     flexibleSpace: Center(
-              //       child: Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 5),
-              //         child: Row(
-              //           children: [
-              //             Container(
-              //               height: 45,
-              //               width: MediaQuery.of(context).size.width - 20,
-              //               decoration: BoxDecoration(
-              //                   // color: Colors.white54,
-              //                   borderRadius: BorderRadius.circular(20),
-              //                   border: Border.all(
-              //                       color: const Color.fromARGB(
-              //                           255, 213, 216, 218))),
-              //               child: const TextField(
-              //                 autocorrect: true,
-              //                 autofillHints: ["Pastel", "Gradients", "Quotes"],
-              //                 decoration: InputDecoration(
-              //                     hintText: "Search for wallpapers",
-              //                     hintStyle:
-              //                         TextStyle(fontWeight: FontWeight.w200),
-              //                     prefixIcon: Icon(Icons.search),
-              //                     border: InputBorder.none),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     )),
               SliverPadding(
+                key: const GlobalObjectKey("Wally heading homepage"),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
                     // color: Colors.red,
-                    height: MediaQuery.of(context).size.height * 0.06,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,195 +82,14 @@ class _FeaturedState extends State<Featured> {
                 ),
               ),
               SliverPadding(
-                sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => InkWell(
-                        onTap: () => {},
-                        child: InkWell(
-                          onTap: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => FullScreen(
-                                          desc: walls[index]["desc"],
-                                          imageLink: walls[index]["link"],
-                                          name: walls[index]["name"],
-                                          tags: walls[index]["catagories"],
-                                          variants: walls[index]["variants"],
-                                          id: walls[index]["id"],
-                                        )))
-                          },
-                          child: Stack(children: <Widget>[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: ShaderMask(
-                                  shaderCallback: (rect) {
-                                    return const LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                        Color.fromARGB(91, 0, 0, 0)
-                                      ],
-                                    ).createShader(Rect.fromLTRB(
-                                        0, -140, rect.width, rect.height - 20));
-                                  },
-                                  blendMode: BlendMode.darken,
-                                  child: CachedNetworkImage(
-                                    filterQuality: FilterQuality.medium,
-                                    imageUrl: walls[index]["link"],
-                                    imageBuilder: (ctx, imageProvider) =>
-                                        Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    placeholder: (ctx, url) => Container(
-                                      color: Colors.white,
-                                      alignment: Alignment.center,
-                                      child: const CupertinoActivityIndicator(),
-                                    ),
-                                  )),
-                            ),
-                            Positioned(
-                                bottom: 0,
-                                left: 5,
-                                right: 0,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          walls[index]["name"],
-                                          maxLines: 2,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                      IconButton(
-                                          padding: EdgeInsets.zero,
-                                          onPressed: () async {
-                                            Vibrate.feedback(
-                                                FeedbackType.success);
-                                            await FileManager()
-                                                .addToLike(walls[index]);
-                                            checkPres(index) == false
-                                                ? Fluttertoast.showToast(
-                                                    msg: "Added to Liked",
-                                                    toastLength:
-                                                        Toast.LENGTH_LONG,
-                                                    gravity: ToastGravity
-                                                        .BOTTOM_LEFT,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0)
-                                                : Fluttertoast.showToast(
-                                                    msg: "Removed",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.SNACKBAR,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor: Colors.red,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0);
-                                            setState(() {
-                                              getLikesList();
-                                            });
-                                          },
-                                          icon: checkPres(walls[index]["id"]) ==
-                                                  false
-                                              ? PhosphorIcon(
-                                                  PhosphorIcons.regular.heart,
-                                                  color: Colors.white)
-                                              : PhosphorIcon(
-                                                  PhosphorIcons.fill.heart,
-                                                  color:
-                                                      const Color(0xFFDCB3E9)))
-                                    ],
-                                  ),
-                                ))
-                          ]),
-                        ),
-                      ),
-                      childCount: walls.length,
-                    ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width < 700 ? 2 : 3,
-                      childAspectRatio: MediaQuery.of(context).size.width < 700
-                          ? 9 / 16
-                          : 3 / 4,
-                      mainAxisSpacing:
-                          MediaQuery.of(context).size.width < 700 ? 4 : 15,
-                      crossAxisSpacing:
-                          MediaQuery.of(context).size.width < 700 ? 4 : 15,
-                    )),
-                padding:
-                    const EdgeInsets.only(left: 15, right: 15, bottom: 100),
-              )
-            ],
-          )
-        : Row(
-            children: [
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  height: MediaQuery.of(context).size.height,
-                  child: Image.asset(
-                    "lib/assets/backgrounds/home.png",
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                  )),
-              Expanded(
-                  child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  const SliverAppBar(
-                    floating: true,
-                    toolbarHeight: 82,
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
-                      title: Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Wally picks",
-                                style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black)),
-                            Text("Here is our entire collection ✨",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverPadding(
-                    sliver: SliverGrid(
+                key: const GlobalObjectKey("Grid render for homepage"),
+                sliver: walls.isNotEmpty
+                    ? SliverGrid(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) => InkWell(
                             onTap: () => {},
                             child: InkWell(
-                              onTap: () {
+                              onTap: () => {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -310,7 +101,7 @@ class _FeaturedState extends State<Featured> {
                                               variants: walls[index]
                                                   ["variants"],
                                               id: walls[index]["id"],
-                                            )));
+                                            )))
                               },
                               child: Stack(children: <Widget>[
                                 ClipRRect(
@@ -346,8 +137,11 @@ class _FeaturedState extends State<Featured> {
                                         placeholder: (ctx, url) => Container(
                                           color: Colors.white,
                                           alignment: Alignment.center,
-                                          child:
-                                              const CupertinoActivityIndicator(),
+                                          child: LoadingAnimationWidget
+                                              .discreteCircle(
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       )),
                                 ),
@@ -362,10 +156,17 @@ class _FeaturedState extends State<Featured> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            walls[index]["name"],
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                          Flexible(
+                                            child: Text(
+                                              walls[index]["name"],
+                                              maxLines: 2,
+                                              softWrap: true,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                           IconButton(
                                               padding: EdgeInsets.zero,
@@ -374,10 +175,32 @@ class _FeaturedState extends State<Featured> {
                                                     FeedbackType.success);
                                                 await FileManager()
                                                     .addToLike(walls[index]);
+                                                checkPres(index) == false
+                                                    ? Fluttertoast.showToast(
+                                                        msg: "Added to Liked",
+                                                        toastLength:
+                                                            Toast.LENGTH_LONG,
+                                                        gravity: ToastGravity
+                                                            .BOTTOM_LEFT,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0)
+                                                    : Fluttertoast.showToast(
+                                                        msg: "Removed",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity: ToastGravity
+                                                            .SNACKBAR,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0);
                                                 setState(() {
                                                   getLikesList();
                                                 });
-                                                // await FileManager().readLikes();
                                               },
                                               icon: checkPres(
                                                           walls[index]["id"]) ==
@@ -388,12 +211,8 @@ class _FeaturedState extends State<Featured> {
                                                       color: Colors.white)
                                                   : PhosphorIcon(
                                                       PhosphorIcons.fill.heart,
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              217,
-                                                              130,
-                                                              228)))
+                                                      color: const Color(
+                                                          0xFFDCB3E9)))
                                         ],
                                       ),
                                     ))
@@ -413,12 +232,212 @@ class _FeaturedState extends State<Featured> {
                               MediaQuery.of(context).size.width < 700 ? 4 : 15,
                           crossAxisSpacing:
                               MediaQuery.of(context).size.width < 700 ? 4 : 15,
-                        )),
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 100),
-                  )
-                ],
-              ))
+                        ))
+                    : SliverToBoxAdapter(
+                        key: const GlobalObjectKey("Null object"),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              LoadingAnimationWidget.discreteCircle(
+                                size: 40,
+                                color: Colors.white,
+                              ),
+                              const Text("Refreshing Wallpapers"),
+                            ],
+                          ),
+                        ),
+                      ),
+                padding:
+                    const EdgeInsets.only(left: 15, right: 15, bottom: 100),
+              )
+            ],
+          )
+        : Row(
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  height: MediaQuery.of(context).size.height,
+                  child: Image.asset(
+                    "lib/assets/backgrounds/home.png",
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
+                  )),
+              Expanded(
+                  key: const GlobalObjectKey("Tablet view right column home"),
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      const SliverAppBar(
+                        floating: true,
+                        toolbarHeight: 82,
+                        flexibleSpace: FlexibleSpaceBar(
+                          collapseMode: CollapseMode.parallax,
+                          title: Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Wally picks",
+                                    style: TextStyle(
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black)),
+                                Text("Here is our entire collection ✨",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SliverPadding(
+                        sliver: SliverGrid(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) => InkWell(
+                                onTap: () => {},
+                                child: InkWell(
+                                  key: GlobalObjectKey(
+                                      '$index+HomePage Tablet view Object'),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) => FullScreen(
+                                                  desc: walls[index]["desc"],
+                                                  imageLink: walls[index]
+                                                      ["link"],
+                                                  name: walls[index]["name"],
+                                                  tags: walls[index]
+                                                      ["catagories"],
+                                                  variants: walls[index]
+                                                      ["variants"],
+                                                  id: walls[index]["id"],
+                                                )));
+                                  },
+                                  child: Stack(children: <Widget>[
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: ShaderMask(
+                                          shaderCallback: (rect) {
+                                            return const LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.transparent,
+                                                Color.fromARGB(91, 0, 0, 0)
+                                              ],
+                                            ).createShader(Rect.fromLTRB(
+                                                0,
+                                                -140,
+                                                rect.width,
+                                                rect.height - 20));
+                                          },
+                                          blendMode: BlendMode.darken,
+                                          child: CachedNetworkImage(
+                                            filterQuality: FilterQuality.medium,
+                                            imageUrl: walls[index]["link"],
+                                            imageBuilder:
+                                                (ctx, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            placeholder: (ctx, url) =>
+                                                Container(
+                                              color: Colors.white,
+                                              alignment: Alignment.center,
+                                              child: LoadingAnimationWidget
+                                                  .discreteCircle(
+                                                      size: 20,
+                                                      color: Colors.white),
+                                            ),
+                                          )),
+                                    ),
+                                    Positioned(
+                                        bottom: 0,
+                                        left: 5,
+                                        right: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                walls[index]["name"],
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  onPressed: () async {
+                                                    Vibrate.feedback(
+                                                        FeedbackType.success);
+                                                    await FileManager()
+                                                        .addToLike(
+                                                            walls[index]);
+                                                    setState(() {
+                                                      getLikesList();
+                                                    });
+                                                    // await FileManager().readLikes();
+                                                  },
+                                                  icon: checkPres(walls[index]
+                                                              ["id"]) ==
+                                                          false
+                                                      ? PhosphorIcon(
+                                                          PhosphorIcons
+                                                              .regular.heart,
+                                                          color: Colors.white)
+                                                      : PhosphorIcon(
+                                                          PhosphorIcons
+                                                              .fill.heart,
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              217, 130, 228)))
+                                            ],
+                                          ),
+                                        ))
+                                  ]),
+                                ),
+                              ),
+                              childCount: walls.length,
+                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount:
+                                  MediaQuery.of(context).size.width < 700
+                                      ? 2
+                                      : 3,
+                              childAspectRatio:
+                                  MediaQuery.of(context).size.width < 700
+                                      ? 9 / 16
+                                      : 3 / 4,
+                              mainAxisSpacing:
+                                  MediaQuery.of(context).size.width < 700
+                                      ? 4
+                                      : 15,
+                              crossAxisSpacing:
+                                  MediaQuery.of(context).size.width < 700
+                                      ? 4
+                                      : 15,
+                            )),
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, bottom: 100),
+                      )
+                    ],
+                  ))
             ],
           );
   }
