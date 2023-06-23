@@ -158,7 +158,7 @@ class _FullScreenState extends State<FullScreen> {
                                             ),
                                             Text(
                                               widget.desc,
-                                              maxLines: 4,
+                                              maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                   fontSize: 12,
@@ -204,8 +204,7 @@ class _FullScreenState extends State<FullScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 5),
+                                        padding: EdgeInsets.only(bottom: 2),
                                         child: Text(
                                           "Variants",
                                           textAlign: TextAlign.start,
@@ -540,9 +539,7 @@ class _FullScreenState extends State<FullScreen> {
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
+                                        const SizedBox(height: 20),
                                         InkWell(
                                           onTap: () {
                                             showDialog(
