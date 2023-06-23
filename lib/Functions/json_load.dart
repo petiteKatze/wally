@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
+  final String apiLink = "https://drab-erin-moose-ring.cyclic.app";
+  // final String apiLink = "https://localhost:5001";
   final dio = Dio();
   Future<String?> get _directoryPath async {
     Directory? directory = await getExternalStorageDirectory();
@@ -17,10 +20,9 @@ class FileManager {
     var status = await Permission.storage.request();
 
     if (status == PermissionStatus.denied) {
-      exit(1);
+      Permission.storage.request();
     }
-    final response =
-        await dio.get("https://drab-erin-moose-ring.cyclic.app/$apiPath");
+    final response = await dio.get("$apiLink/$apiPath");
     if (kDebugMode) {
       print(response.data);
     }
@@ -54,18 +56,18 @@ class FileManager {
         await newFile.writeAsBytes(utf8.encode(jsonEncode(temp)));
       } else {
         filePres.add(data);
-        final newFile = await File('$path/Walldata/likedItems.json');
+        final newFile = File('$path/Walldata/likedItems.json');
         newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
       }
     } else {
       var status = await Permission.storage.request();
       if (status == PermissionStatus.denied) {
-        exit(1);
+        Permission.storage.request();
       }
       final path = await _directoryPath;
       var filePres = await readFile("likedItems");
       filePres.removeWhere((ele) => ele["id"] == data["id"]);
-      final newFile = await File('$path/Walldata/likedItems.json');
+      final newFile = File('$path/Walldata/likedItems.json');
       newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
       if (kDebugMode) {
         print("deleted");
@@ -82,6 +84,8 @@ class FileManager {
     }
   }
 
+  
+
   Future<bool> isPresent(int id) async {
     List<dynamic> likesList = await readLikes();
     for (var i = 0; i < likesList.length; i++) {
@@ -96,15 +100,35 @@ class FileManager {
   readFile(String fileName) async {
     var status = await Permission.storage.request();
     if (status == PermissionStatus.denied) {
-      exit(1);
+      Permission.storage.request();
     }
     final path = await _directoryPath;
-    var presentFile = await File('$path/Walldata/$fileName.json');
+    var presentFile = File('$path/Walldata/$fileName.json');
     if (await presentFile.exists()) {
       final data = jsonDecode(utf8.decode(presentFile.readAsBytesSync()));
       return data;
     } else {
       return null;
+    }
+  }
+
+  getCatagory(String catName) async {
+    var status = await Permission.storage.request();
+    if (status == PermissionStatus.denied) {
+      Permission.storage.request();
+    }
+    final path = await _directoryPath;
+    var presentFile = File('$path/Walldata/catagory/$catName.json');
+    if (await presentFile.exists()) {
+      final data = jsonDecode(utf8.decode(presentFile.readAsBytesSync()));
+      return data;
+    } else {
+      final response = await dio.get("$apiLink/catagory/$catName");
+      var newFile = await File('$path/Walldata/catagory/$catName.json')
+          .create(recursive: true);
+      await newFile.delete();
+      await newFile.writeAsBytes(utf8.encode(jsonEncode(response.data)));
+      return getCatagory(catName);
     }
   }
 
@@ -124,10 +148,14 @@ class FileManager {
       await writeFile("catagoryData", "/ctData");
       await writeFile("allWalls", "/all");
     } else {
-      //also to download if newer version available.
+      Fluttertoast.showToast(
+          msg: "Loading walls",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.SNACKBAR,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
 
-      final res =
-          await dio.get("https://drab-erin-moose-ring.cyclic.app/version");
+      final res = await dio.get("$apiLink/version");
 
       if (int.parse(res.toString()) > shouldDownload["version"]) {
         await writeFile("initState", "/prState");

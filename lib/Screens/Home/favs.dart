@@ -162,7 +162,6 @@ class _FavsState extends State<Favs> {
                                               setState(() {
                                                 getLikes();
                                               });
-                                              // await FileManager().readLikes();
                                             },
                                             icon: PhosphorIcon(
                                                 PhosphorIcons.regular.xCircle,
@@ -179,12 +178,20 @@ class _FavsState extends State<Favs> {
                   : SliverToBoxAdapter(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.4,
-                        child: const Center(
-                          child: Text(
-                              "You haven't added any wallpapers to your favorites"),
+                        child: const Opacity(
+                          opacity: 0.5,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.cancel),
+                                Text("No wallpapers here"),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    )
+                    ),
             ],
           )
         : Row(
@@ -323,17 +330,10 @@ class _FavsState extends State<Favs> {
                                                   });
                                                   // await FileManager().readLikes();
                                                 },
-                                                icon: checkPres(idx) == false
-                                                    ? PhosphorIcon(
-                                                        PhosphorIcons
-                                                            .regular.heart,
-                                                        color: Colors.white)
-                                                    : PhosphorIcon(
-                                                        PhosphorIcons
-                                                            .fill.heart,
-                                                        color: const Color
-                                                                .fromARGB(255,
-                                                            217, 130, 228)))
+                                                icon: PhosphorIcon(
+                                                    PhosphorIcons
+                                                        .regular.xCircle,
+                                                    color: Colors.white))
                                           ],
                                         ),
                                       ))

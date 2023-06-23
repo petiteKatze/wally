@@ -1,4 +1,5 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
+
 import "package:flutter/services.dart";
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -6,6 +7,7 @@ import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
+import "package:fluttertoast/fluttertoast.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Screens/Home/home.dart";
 
@@ -83,6 +85,8 @@ class _FullScreenState extends State<FullScreen> {
           MediaQuery.of(context).size.width < 900
               ? Positioned(
                   bottom: 0,
+                  left: MediaQuery.of(context).size.width > 600 ? 100 : 0,
+                  right: MediaQuery.of(context).size.width > 600 ? 100 : 0,
                   child: AnimatedContainer(
                       curve: Curves.bounceOut,
                       duration: const Duration(milliseconds: 500),
@@ -103,7 +107,9 @@ class _FullScreenState extends State<FullScreen> {
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20))),
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery.of(context).size.width > 600
+                          ? MediaQuery.of(context).size.width / 2
+                          : MediaQuery.of(context).size.width,
                       height: aniHeight,
                       child: !hide
                           ? Padding(
@@ -129,8 +135,16 @@ class _FullScreenState extends State<FullScreen> {
                                     children: [
                                       SizedBox(
                                         width:
-                                            MediaQuery.of(context).size.width *
-                                                0.7,
+                                            MediaQuery.of(context).size.width >
+                                                    600
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.7,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -143,8 +157,12 @@ class _FullScreenState extends State<FullScreen> {
                                             ),
                                             Text(
                                               widget.desc,
-                                              style:
-                                                  const TextStyle(fontSize: 12),
+                                              maxLines: 4,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
                                             )
                                           ],
                                         ),
@@ -240,6 +258,13 @@ class _FullScreenState extends State<FullScreen> {
                                           ],
                                         ),
                                       ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.width >
+                                                    600
+                                                ? 20
+                                                : 0,
+                                      ),
                                       InkWell(
                                         onTap: () {
                                           showDialog(
@@ -249,7 +274,7 @@ class _FullScreenState extends State<FullScreen> {
                                                     title: const Text(
                                                         "Set Wallpaper"),
                                                     content: const Text(
-                                                        "You can chose where to set the wallpaper,The wallpaper is automatically downloaded as well"),
+                                                        "In the next screen you will get a prompt to set the wallpaper. Also you can download the wallpaper"),
                                                     actions: [
                                                       CupertinoDialogAction(
                                                         child: const Text(
@@ -262,27 +287,31 @@ class _FullScreenState extends State<FullScreen> {
 
                                                           try {
                                                             await AsyncWallpaper
-                                                                    .setWallpaperFromFileNative(
+                                                                .setWallpaperFromFileNative(
                                                               goToHome: true,
                                                               filePath:
                                                                   file.path,
-                                                              toastDetails:
-                                                                  ToastDetails
-                                                                      .success(),
-                                                              errorToastDetails:
-                                                                  ToastDetails
-                                                                      .error(),
-                                                            )
-                                                                ? 'Wallpaper set'
-                                                                : 'Failed to get wallpaper.';
-                                                          } on PlatformException {}
+                                                            );
+                                                          } on PlatformException {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "Sorry, Try again",
+                                                                toastLength: Toast
+                                                                    .LENGTH_SHORT,
+                                                                gravity:
+                                                                    ToastGravity
+                                                                        .SNACKBAR,
+                                                                timeInSecForIosWeb:
+                                                                    1,
+                                                                backgroundColor:
+                                                                    Colors.red,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                fontSize: 16.0);
+                                                          }
                                                         },
                                                       ),
-                                                      const CupertinoDialogAction(
-                                                          child: Text(
-                                                              "Lock SCreen")),
-                                                      const CupertinoDialogAction(
-                                                          child: Text("Both")),
                                                     ],
                                                   ));
                                         },
@@ -294,7 +323,7 @@ class _FullScreenState extends State<FullScreen> {
                                           child: const Center(
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: 10),
+                                                  vertical: 15),
                                               child: Text(
                                                 "Set Wallpaper",
                                                 style: TextStyle(
@@ -520,13 +549,28 @@ class _FullScreenState extends State<FullScreen> {
                                                               )
                                                                   ? 'Wallpaper set'
                                                                   : 'Failed to get wallpaper.';
-                                                            } on PlatformException {}
+                                                            } on PlatformException {
+                                                              Fluttertoast.showToast(
+                                                                  msg:
+                                                                      "Sorry, Try again",
+                                                                  toastLength: Toast
+                                                                      .LENGTH_SHORT,
+                                                                  gravity:
+                                                                      ToastGravity
+                                                                          .SNACKBAR,
+                                                                  timeInSecForIosWeb:
+                                                                      1,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .red,
+                                                                  textColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize:
+                                                                      16.0);
+                                                            }
                                                           },
                                                         ),
-                                                        CupertinoDialogAction(
-                                                            onPressed: () {},
-                                                            child: const Text(
-                                                                "Download ")),
                                                       ],
                                                     ));
                                           },

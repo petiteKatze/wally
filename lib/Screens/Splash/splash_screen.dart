@@ -25,9 +25,22 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: <Widget>[
           SvgPicture.asset(
-            "lib/assets/backgrounds/splash_screen.svg",
-            fit: BoxFit.fill,
+            MediaQuery.of(context).size.width < 900
+                ? "lib/assets/backgrounds/splash_screen.svg"
+                : "lib/assets/backgrounds/wideSplas.svg",
+            fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
+          ),
+          Opacity(
+            opacity: 0.4,
+            child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage("lib/assets/backgrounds/noise.png")),
+                )),
           ),
           Center(
               child: Column(
@@ -36,13 +49,14 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               SvgPicture.asset(
                 "lib/assets/logos/transLog.svg",
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.18,
               ),
               const SizedBox(
                 height: 20,
               ),
               const CupertinoActivityIndicator(
                 color: Colors.white,
+                radius: 15,
               )
             ],
           )),

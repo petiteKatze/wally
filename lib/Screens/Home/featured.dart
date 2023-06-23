@@ -5,6 +5,7 @@ import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
 import "package:wally/Screens/full_wall.dart";
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Featured extends StatefulWidget {
   const Featured({super.key});
@@ -44,42 +45,43 @@ class _FeaturedState extends State<Featured> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              SliverAppBar(
-                  elevation: 0,
-                  pinned: false,
-                  toolbarHeight: 80,
-                  floating: true,
-                  flexibleSpace: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 45,
-                            width: MediaQuery.of(context).size.width - 20,
-                            decoration: BoxDecoration(
-                                // color: Colors.white54,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 213, 216, 218))),
-                            child: const TextField(
-                              autocorrect: true,
-                              autofillHints: ["Pastel", "Gradients", "Quotes"],
-                              decoration: InputDecoration(
-                                  hintText: "Search for wallpapers",
-                                  hintStyle:
-                                      TextStyle(fontWeight: FontWeight.w200),
-                                  prefixIcon: Icon(Icons.search),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )),
+              // SliverAppBar(
+              //     elevation: 0,
+              //     pinned: false,
+              //     toolbarHeight: 80,
+              //     floating: true,
+              //     flexibleSpace: Center(
+              //       child: Padding(
+              //         padding: const EdgeInsets.symmetric(horizontal: 5),
+              //         child: Row(
+              //           children: [
+              //             Container(
+              //               height: 45,
+              //               width: MediaQuery.of(context).size.width - 20,
+              //               decoration: BoxDecoration(
+              //                   // color: Colors.white54,
+              //                   borderRadius: BorderRadius.circular(20),
+              //                   border: Border.all(
+              //                       color: const Color.fromARGB(
+              //                           255, 213, 216, 218))),
+              //               child: const TextField(
+              //                 autocorrect: true,
+              //                 autofillHints: ["Pastel", "Gradients", "Quotes"],
+              //                 decoration: InputDecoration(
+              //                     hintText: "Search for wallpapers",
+              //                     hintStyle:
+              //                         TextStyle(fontWeight: FontWeight.w200),
+              //                     prefixIcon: Icon(Icons.search),
+              //                     border: InputBorder.none),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     )),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
                     // color: Colors.red,
@@ -114,7 +116,7 @@ class _FeaturedState extends State<Featured> {
                         onTap: () => {},
                         child: InkWell(
                           onTap: () => {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (ctx) => FullScreen(
@@ -192,6 +194,28 @@ class _FeaturedState extends State<Featured> {
                                                 FeedbackType.success);
                                             await FileManager()
                                                 .addToLike(walls[index]);
+                                            checkPres(index) == false
+                                                ? Fluttertoast.showToast(
+                                                    msg: "Added to Liked",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity: ToastGravity
+                                                        .BOTTOM_LEFT,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0)
+                                                : Fluttertoast.showToast(
+                                                    msg: "Removed",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.SNACKBAR,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
                                             setState(() {
                                               getLikesList();
                                             });
@@ -274,7 +298,7 @@ class _FeaturedState extends State<Featured> {
                             onTap: () => {},
                             child: InkWell(
                               onTap: () {
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (ctx) => FullScreen(

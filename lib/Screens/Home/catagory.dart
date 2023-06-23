@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:wally/Screens/col_walls.dart";
 
 import "../../Functions/json_load.dart";
 
@@ -72,55 +73,71 @@ class _CatagoryState extends State<Catagory> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) => InkWell(
                         onTap: () => {},
-                        child: Stack(children: <Widget>[
-                          CachedNetworkImage(
-                            filterQuality: FilterQuality.medium,
-                            imageUrl: cats[index]["image"],
-                            imageBuilder: (ctx, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
+                        child: InkWell(
+                          onTap: () async {
+                            List<dynamic> passFiles = await FileManager()
+                                .getCatagory(cats[index]["type"]);
+
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) => Col(
+                                          type: cats[index]["type"],
+                                          useFile: passFiles,
+                                        ))));
+                          },
+                          child: Stack(children: <Widget>[
+                            CachedNetworkImage(
+                              filterQuality: FilterQuality.medium,
+                              imageUrl: cats[index]["image"],
+                              imageBuilder: (ctx, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
+                              placeholder: (ctx, url) => Container(
+                                color: Colors.white,
+                                alignment: Alignment.center,
+                                child: const CupertinoActivityIndicator(),
+                              ),
                             ),
-                            placeholder: (ctx, url) => Container(
-                              color: Colors.white,
-                              alignment: Alignment.center,
-                              child: const CupertinoActivityIndicator(),
-                            ),
-                          ),
-                          Positioned(
-                              bottom: 0,
-                              left: 5,
-                              right: 0,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 8),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      cats[index]["type"],
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      "${cats[index]["total"]} Wallpapers",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300),
-                                    )
-                                  ],
-                                ),
-                              ))
-                        ]),
+                            Positioned(
+                                bottom: 0,
+                                left: 5,
+                                right: 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 8),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cats[index]["type"],
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                        "${cats[index]["total"]} Wallpapers",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300),
+                                      )
+                                    ],
+                                  ),
+                                ))
+                          ]),
+                        ),
                       ),
                       childCount: cats.length,
                     ),
@@ -180,56 +197,72 @@ class _CatagoryState extends State<Catagory> {
                         delegate: SliverChildBuilderDelegate(
                           (context, index) => InkWell(
                             onTap: () => {},
-                            child: Stack(children: <Widget>[
-                              CachedNetworkImage(
-                                filterQuality: FilterQuality.medium,
-                                imageUrl: cats[index]["image"],
-                                imageBuilder: (ctx, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+                            child: InkWell(
+                              onTap: () async {
+                                List<dynamic> passFiles = await FileManager()
+                                    .getCatagory(cats[index]["type"]);
+
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => Col(
+                                              type: cats[index]["type"],
+                                              useFile: passFiles,
+                                            )));
+                              },
+                              child: Stack(children: <Widget>[
+                                CachedNetworkImage(
+                                  filterQuality: FilterQuality.medium,
+                                  imageUrl: cats[index]["image"],
+                                  imageBuilder: (ctx, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
+                                  placeholder: (ctx, url) => Container(
+                                    color: Colors.white,
+                                    alignment: Alignment.center,
+                                    child: const CupertinoActivityIndicator(),
+                                  ),
                                 ),
-                                placeholder: (ctx, url) => Container(
-                                  color: Colors.white,
-                                  alignment: Alignment.center,
-                                  child: const CupertinoActivityIndicator(),
-                                ),
-                              ),
-                              Positioned(
-                                  bottom: 0,
-                                  left: 5,
-                                  right: 0,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          cats[index]["type"],
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(
-                                          "${cats[index]["total"]} Wallpapers",
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w300),
-                                        )
-                                      ],
-                                    ),
-                                  ))
-                            ]),
+                                Positioned(
+                                    bottom: 0,
+                                    left: 5,
+                                    right: 0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cats[index]["type"],
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                            "${cats[index]["total"]} Wallpapers",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w300),
+                                          )
+                                        ],
+                                      ),
+                                    ))
+                              ]),
+                            ),
                           ),
                           childCount: cats.length,
                         ),
