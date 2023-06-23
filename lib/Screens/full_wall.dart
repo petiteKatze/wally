@@ -38,6 +38,7 @@ class _FullScreenState extends State<FullScreen> {
   var disImage = "";
   double aniHeight = 50;
   double aniWidth = 50;
+  int selectedVariant = 0;
 
   bool hide = true;
   @override
@@ -202,38 +203,66 @@ class _FullScreenState extends State<FullScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: const Text(
+                                          "Variants",
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
                                       widget.variants.isNotEmpty
                                           ? Row(
                                               children: [
                                                 for (var i in widget.variants)
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 8),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          disImage =
-                                                              i.values.first;
-                                                          Vibrate.feedback(
-                                                              FeedbackType
-                                                                  .success);
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        height: 30,
-                                                        width: 30,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              color: Colors
-                                                                  .black54),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: Color(int.parse(
-                                                              'FF${i.keys.first}',
-                                                              radix: 16)),
+                                                  Opacity(
+                                                    opacity: selectedVariant ==
+                                                            widget.variants
+                                                                .indexOf(i)
+                                                        ? 1
+                                                        : 0.5,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 8),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedVariant =
+                                                                widget.variants
+                                                                    .indexOf(i);
+                                                          });
+                                                          setState(() {
+                                                            disImage =
+                                                                i.values.first;
+                                                            Vibrate.feedback(
+                                                                FeedbackType
+                                                                    .success);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          height: 30,
+                                                          width: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                width: selectedVariant ==
+                                                                        widget
+                                                                            .variants
+                                                                            .indexOf(
+                                                                                i)
+                                                                    ? 2
+                                                                    : 0.5,
+                                                                color: Colors
+                                                                    .black54),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            color: Color(int.parse(
+                                                                'FF${i.keys.first}',
+                                                                radix: 16)),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -278,7 +307,7 @@ class _FullScreenState extends State<FullScreen> {
                                                     actions: [
                                                       CupertinoDialogAction(
                                                         child: const Text(
-                                                            "Home Screen"),
+                                                            "Set Wallpaper"),
                                                         onPressed: () async {
                                                           var file =
                                                               await DefaultCacheManager()
@@ -527,7 +556,7 @@ class _FullScreenState extends State<FullScreen> {
                                                       actions: [
                                                         CupertinoDialogAction(
                                                           child: const Text(
-                                                              "Home Screen"),
+                                                              "Set Wallpaper"),
                                                           onPressed: () async {
                                                             var file =
                                                                 await DefaultCacheManager()

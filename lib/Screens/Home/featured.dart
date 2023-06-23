@@ -220,7 +220,8 @@ class _FeaturedState extends State<Featured> {
                                               getLikesList();
                                             });
                                           },
-                                          icon: checkPres(index) == false
+                                          icon: checkPres(walls[index]["id"]) ==
+                                                  false
                                               ? PhosphorIcon(
                                                   PhosphorIcons.regular.heart,
                                                   color: Colors.white)
@@ -378,7 +379,9 @@ class _FeaturedState extends State<Featured> {
                                                 });
                                                 // await FileManager().readLikes();
                                               },
-                                              icon: checkPres(index) == false
+                                              icon: checkPres(
+                                                          walls[index]["id"]) ==
+                                                      false
                                                   ? PhosphorIcon(
                                                       PhosphorIcons
                                                           .regular.heart,
@@ -424,6 +427,7 @@ class _FeaturedState extends State<Featured> {
     List<dynamic> data = await FileManager().getFaetured();
     setState(() {
       walls = data;
+      walls.shuffle();
     });
   }
 
