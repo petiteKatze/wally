@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: <Widget>[
           SvgPicture.asset(
-            MediaQuery.of(context).size.width < 900
+            MediaQuery.of(context).size.width < 600
                 ? "lib/assets/backgrounds/splash_screen.svg"
                 : "lib/assets/backgrounds/wideSplas.svg",
             fit: BoxFit.cover,

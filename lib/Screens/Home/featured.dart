@@ -29,12 +29,13 @@ class _FeaturedState extends State<Featured> {
   Widget build(BuildContext context) {
     return MediaQuery.of(context).size.width < 900
         ? CustomScrollView(
-            key: const GlobalObjectKey(
+            key: const ValueKey(
               "home",
             ),
             slivers: [
               SliverAppBar(
-                key: const GlobalObjectKey("Sliver App Bar home"),
+                leading: const SizedBox(),
+                key: const ValueKey("Sliver App Bar home"),
                 stretch: true,
                 elevation: 0,
                 pinned: false,
@@ -42,7 +43,7 @@ class _FeaturedState extends State<Featured> {
                 expandedHeight:
                     MediaQuery.of(context).size.width > 700 ? 600 : 300,
                 flexibleSpace: FlexibleSpaceBar(
-                    key: const GlobalObjectKey("Home top background"),
+                    key: const ValueKey("Home top background"),
                     centerTitle: true,
                     background: Image.asset(
                       "lib/assets/backgrounds/home.png",
@@ -50,15 +51,12 @@ class _FeaturedState extends State<Featured> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              SliverPadding(
-                key: const GlobalObjectKey("Wally heading homepage"),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              const SliverPadding(
+                key: ValueKey("Wally heading homepage"),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
-                    // color: Colors.red,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -82,7 +80,7 @@ class _FeaturedState extends State<Featured> {
                 ),
               ),
               SliverPadding(
-                key: const GlobalObjectKey("Grid render for homepage"),
+                key: const ValueKey("Grid render for homepage"),
                 sliver: walls.isNotEmpty
                     ? SliverGrid(
                         delegate: SliverChildBuilderDelegate(
@@ -158,7 +156,7 @@ class _FeaturedState extends State<Featured> {
                                         children: [
                                           Flexible(
                                             child: Text(
-                                              walls[index]["name"],
+                                              walls[index]["name"].toString(),
                                               maxLines: 2,
                                               softWrap: true,
                                               overflow: TextOverflow.ellipsis,
@@ -229,12 +227,12 @@ class _FeaturedState extends State<Featured> {
                                   ? 9 / 16
                                   : 3 / 4,
                           mainAxisSpacing:
-                              MediaQuery.of(context).size.width < 700 ? 4 : 15,
+                              MediaQuery.of(context).size.width < 700 ? 15 : 25,
                           crossAxisSpacing:
-                              MediaQuery.of(context).size.width < 700 ? 4 : 15,
+                              MediaQuery.of(context).size.width < 700 ? 8 : 15,
                         ))
                     : SliverToBoxAdapter(
-                        key: const GlobalObjectKey("Null object"),
+                        key: const ValueKey("Null object"),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.4,
                           child: isPermanent
@@ -309,30 +307,34 @@ class _FeaturedState extends State<Featured> {
                     alignment: Alignment.bottomCenter,
                   )),
               Expanded(
-                  key: const GlobalObjectKey("Tablet view right column home"),
+                  key: const ValueKey("Tablet view right column home"),
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
-                      const SliverAppBar(
-                        floating: true,
-                        toolbarHeight: 82,
-                        flexibleSpace: FlexibleSpaceBar(
-                          collapseMode: CollapseMode.parallax,
-                          title: Padding(
-                            padding: EdgeInsets.only(top: 20),
+                      const SliverPadding(
+                        key: ValueKey("Wally heading homepage"),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        sliver: SliverToBoxAdapter(
+                          child: SizedBox(
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Wally picks",
-                                    style: TextStyle(
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black)),
-                                Text("Here is our entire collection ✨",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black))
+                                Text(
+                                  "Wally",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  "Explore the latest and exclusive wallpapers from Wally ",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black87),
+                                )
                               ],
                             ),
                           ),
@@ -384,7 +386,7 @@ class _FeaturedState extends State<Featured> {
                                     (context, index) => InkWell(
                                       onTap: () => {},
                                       child: InkWell(
-                                        key: GlobalObjectKey(
+                                        key: ValueKey(
                                             '$index+HomePage Tablet view Object'),
                                         onTap: () {
                                           Navigator.push(
@@ -471,7 +473,8 @@ class _FeaturedState extends State<Featured> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      walls[index]["name"],
+                                                      walls[index]["name"]
+                                                          .toString(),
                                                       style: const TextStyle(
                                                           color: Colors.white),
                                                     ),

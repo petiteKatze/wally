@@ -27,6 +27,7 @@ class _FavsState extends State<Favs> {
         ? CustomScrollView(
             slivers: [
               SliverAppBar(
+                leading: const SizedBox(),
                 stretch: true,
                 elevation: 0,
                 pinned: false,
@@ -41,16 +42,11 @@ class _FavsState extends State<Favs> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              SliverPadding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
-                    // color: Colors.red,
-                    height: MediaQuery.of(context).size.width > 600
-                        ? MediaQuery.of(context).size.height * 0.05
-                        : MediaQuery.of(context).size.height * 0.07,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -98,6 +94,7 @@ class _FavsState extends State<Favs> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (ctx) => FullScreen(
+                                          key: ValueKey('$idx+Favoriite1'),
                                           desc: walls[idx]["desc"],
                                           imageLink: walls[idx]["link"],
                                           name: walls[idx]["name"],
@@ -157,7 +154,7 @@ class _FavsState extends State<Favs> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        walls[idx]["name"],
+                                        walls[idx]["name"].toString(),
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
@@ -200,11 +197,32 @@ class _FavsState extends State<Favs> {
                         ),
                       ),
                     ),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Made with ❤️ by Diptanshu Mahish",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      Text(
+                          "This is the first release version of the app, more versions and imporvements coming soon, with many more new wallpapers, till then peace :)")
+                    ],
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 200,
+                ),
+              )
             ],
           )
         : Row(
             children: [
               SizedBox(
+                  key: const ValueKey("Favorites Tablet View"),
                   width: MediaQuery.of(context).size.width * 0.45,
                   height: MediaQuery.of(context).size.height,
                   child: Image.asset(
@@ -214,16 +232,16 @@ class _FavsState extends State<Favs> {
                   )),
               Expanded(
                   child: CustomScrollView(
+                key: const ValueKey("favorites tablet side panel 721937"),
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 20),
+                  const SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                     sliver: SliverToBoxAdapter(
                       child: SizedBox(
                         // color: Colors.red,
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        child: const Column(
+
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -248,6 +266,7 @@ class _FavsState extends State<Favs> {
                   ),
                   walls.isNotEmpty
                       ? SliverPadding(
+                          key: const ValueKey("djsfkhsdkfhkahfkSHFK"),
                           padding: const EdgeInsets.only(bottom: 80),
                           sliver: SliverGrid.builder(
                             gridDelegate:
@@ -323,7 +342,7 @@ class _FavsState extends State<Favs> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              walls[idx]["name"],
+                                              walls[idx]["name"].toString(),
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),

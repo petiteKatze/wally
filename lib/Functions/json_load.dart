@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +11,7 @@ class FileManager {
   final String apiLink = "https://drab-erin-moose-ring.cyclic.app";
   // final String apiLink = "https://localhost:5001";
   final dio = Dio();
+
   Future<String?> get _directoryPath async {
     Directory? directory = await getExternalStorageDirectory();
     return directory?.path;
@@ -22,7 +24,9 @@ class FileManager {
     if (status == PermissionStatus.denied) {
       Permission.storage.request();
     }
-    final response = await dio.get("$apiLink/$apiPath");
+    final response =
+        await dio.get("$apiLink/$apiPath").timeout(const Duration(seconds: 45));
+
     if (kDebugMode) {
       print(response.data);
     }
@@ -84,8 +88,6 @@ class FileManager {
     }
   }
 
-  
-
   Future<bool> isPresent(int id) async {
     List<dynamic> likesList = await readLikes();
     for (var i = 0; i < likesList.length; i++) {
@@ -137,31 +139,45 @@ class FileManager {
     if (status == PermissionStatus.denied) {
       Permission.storage.request();
     }
-    final shouldDownload = await readFile('initState');
-    if (kDebugMode) {
-      print(shouldDownload);
-    }
-    if (shouldDownload.toString() == "Instance of 'Future<dynamic>'" ||
-        shouldDownload == null) {
-      //as current state file not present then we need to download all files.
-      await writeFile("initState", "/prState");
-      await writeFile("catagoryData", "/ctData");
-      await writeFile("allWalls", "/all");
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      final shouldDownload = await readFile('initState');
+      if (kDebugMode) {
+        print(shouldDownload);
+      }
+      if (shouldDownload.toString() == "Instance of 'Future<dynamic>'" ||
+          shouldDownload == null) {
+        //as current state file not present then we need to download all files.
+        await writeFile("initState", "/prState");
+        await writeFile("catagoryData", "/ctData");
+        await writeFile("allWalls", "/all");
+      } else {
+        Fluttertoast.showToast(
+            msg: "Loading walls",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+
+        final res = await dio
+            .get("$apiLink/version")
+            .timeout(const Duration(seconds: 30));
+
+        if (int.parse(res.toString()) > shouldDownload["version"]) {
+          await writeFile("initState", "/prState");
+          await writeFile("catagoryData", "/ctData");
+          await writeFile("allWalls", "/all");
+        }
+      }
     } else {
       Fluttertoast.showToast(
-          msg: "Loading walls",
+          msg:
+              "You are not connected to any network, please connect to a network and reload",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.SNACKBAR,
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
-
-      final res = await dio.get("$apiLink/version");
-
-      if (int.parse(res.toString()) > shouldDownload["version"]) {
-        await writeFile("initState", "/prState");
-        await writeFile("catagoryData", "/ctData");
-        await writeFile("allWalls", "/all");
-      }
     }
   }
 

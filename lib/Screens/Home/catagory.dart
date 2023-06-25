@@ -26,6 +26,7 @@ class _CatagoryState extends State<Catagory> {
         ? CustomScrollView(
             slivers: [
               SliverAppBar(
+                leading: const SizedBox(),
                 stretch: true,
                 elevation: 0,
                 pinned: false,
@@ -40,29 +41,29 @@ class _CatagoryState extends State<Catagory> {
                       alignment: Alignment.bottomCenter,
                     )),
               ),
-              SliverAppBar(
-                pinned: true,
-                toolbarHeight: 70,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  collapseMode: CollapseMode.parallax,
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 20),
+              const SliverPadding(
+                key: ValueKey("Wally heading homepage"),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                sliver: SliverToBoxAdapter(
+                  child: SizedBox(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Wally Collections",
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black)),
-                        Text("Check out our super aesthetic collections :)",
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width < 600
-                                        ? 15
-                                        : 20,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black))
+                        Text(
+                          "Catagories",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Check out our latest collections ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black87),
+                        )
                       ],
                     ),
                   ),
@@ -74,10 +75,10 @@ class _CatagoryState extends State<Catagory> {
                       (context, index) => InkWell(
                         onTap: () => {},
                         child: InkWell(
+                          key: ValueKey('$index' "catagory"),
                           onTap: () async {
                             List<dynamic> passFiles = await FileManager()
                                 .getCatagory(cats[index]["type"]);
-
                             // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
@@ -121,16 +122,16 @@ class _CatagoryState extends State<Catagory> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        cats[index]["type"],
+                                        cats[index]["type"].toString(),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w600),
                                       ),
                                       Text(
-                                        "${cats[index]["total"]} Wallpapers",
+                                        "${cats[index]["total"].toString()} Wallpapers",
                                         style: const TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black87,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w300),
                                       )
@@ -146,7 +147,7 @@ class _CatagoryState extends State<Catagory> {
                       crossAxisCount:
                           MediaQuery.of(context).size.width < 700 ? 2 : 3,
                       childAspectRatio: 4 / 3,
-                      mainAxisSpacing: 8,
+                      mainAxisSpacing: 15,
                       crossAxisSpacing: 8,
                     )),
                 padding:
@@ -168,26 +169,29 @@ class _CatagoryState extends State<Catagory> {
                   child: CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  const SliverAppBar(
-                    pinned: true,
-                    toolbarHeight: 100,
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
-                      title: Padding(
-                        padding: EdgeInsets.only(top: 20),
+                  const SliverPadding(
+                    key: ValueKey("Wally heading homepage"),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    sliver: SliverToBoxAdapter(
+                      child: SizedBox(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Collections",
-                                style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black)),
-                            Text("The collections are all here",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black))
+                            Text(
+                              "Wally",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Explore the latest and exclusive wallpapers from Wally ",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black87),
+                            )
                           ],
                         ),
                       ),
@@ -247,14 +251,14 @@ class _CatagoryState extends State<Catagory> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            cats[index]["type"],
+                                            cats[index]["type"].toString(),
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           Text(
-                                            "${cats[index]["total"]} Wallpapers",
+                                            "${cats[index]["total"].toString()} Wallpapers",
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 15,

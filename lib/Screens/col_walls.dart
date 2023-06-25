@@ -28,9 +28,9 @@ class _ColState extends State<Col> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: const GlobalObjectKey("Catagory resulyts"),
+        key: const ValueKey("Catagory resulyts"),
         appBar: AppBar(
-          title: Text(widget.type),
+          title: Text(widget.type.toString()),
         ),
         body: widget.useFile.isNotEmpty
             ? Padding(
@@ -44,7 +44,7 @@ class _ColState extends State<Col> {
                           MediaQuery.of(context).size.width < 600 ? 2 : 3),
                   itemBuilder: (ctx, index) {
                     return InkWell(
-                      key: GlobalObjectKey('$index+ColumnCatagoryResults'),
+                      key: ValueKey('$index+ColumnCatagoryResults'),
                       onTap: () {
                         Navigator.push(
                             context,

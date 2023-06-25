@@ -56,7 +56,7 @@ class _FullScreenState extends State<FullScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
-          widget.name,
+          widget.name.toString(),
           style: const TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -73,6 +73,8 @@ class _FullScreenState extends State<FullScreen> {
       body: Stack(
         children: [
           CachedNetworkImage(
+            key: ValueKey(
+                '${widget.id}+${widget.name}+${widget.tags}Full Screen'),
             fit: BoxFit.cover,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -122,8 +124,8 @@ class _FullScreenState extends State<FullScreen> {
                                       onPressed: () {
                                         Vibrate.feedback(FeedbackType.success);
                                         setState(() {
-                                          aniHeight = 50;
                                           hide = true;
+                                          aniHeight = 50;
                                         });
                                       },
                                       icon: PhosphorIcon(
@@ -151,13 +153,13 @@ class _FullScreenState extends State<FullScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.name,
+                                              widget.name.toString(),
                                               style: const TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              widget.desc,
+                                              widget.desc.toString(),
                                               maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
@@ -215,6 +217,8 @@ class _FullScreenState extends State<FullScreen> {
                                               children: [
                                                 for (var i in widget.variants)
                                                   Opacity(
+                                                    key: ValueKey(
+                                                        '$i+${widget.id}+${widget.name}'),
                                                     opacity: selectedVariant ==
                                                             widget.variants
                                                                 .indexOf(i)
@@ -281,7 +285,7 @@ class _FullScreenState extends State<FullScreen> {
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 4),
-                                                child: Text('#$j'),
+                                                child: Text('#${j.toString()}'),
                                               )
                                           ],
                                         ),
@@ -442,12 +446,12 @@ class _FullScreenState extends State<FullScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          widget.name,
+                                          widget.name.toString(),
                                           style: const TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(widget.desc),
+                                        Text(widget.desc.toString()),
                                         const SizedBox(
                                           height: 15,
                                         ),
@@ -517,6 +521,8 @@ class _FullScreenState extends State<FullScreen> {
                                             children: [
                                               for (var j in widget.tags)
                                                 Padding(
+                                                  key: ValueKey(
+                                                      '$j+${widget.id}+${widget.name}'),
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 4),
@@ -533,7 +539,8 @@ class _FullScreenState extends State<FullScreen> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Center(
-                                                            child: Text('#$j')),
+                                                            child: Text(
+                                                                '#${j.toString()}')),
                                                       )),
                                                 )
                                             ],
