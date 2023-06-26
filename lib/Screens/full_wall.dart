@@ -73,6 +73,8 @@ class _FullScreenState extends State<FullScreen> {
       body: Stack(
         children: [
           CachedNetworkImage(
+            cacheManager: CacheManager(
+                Config("Featured", stalePeriod: const Duration(minutes: 2))),
             key: ValueKey(
                 '${widget.id}+${widget.name}+${widget.tags}Full Screen'),
             fit: BoxFit.cover,

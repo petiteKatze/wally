@@ -1,5 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:permission_handler/permission_handler.dart";
@@ -119,7 +120,12 @@ class _FeaturedState extends State<Featured> {
                                       },
                                       blendMode: BlendMode.darken,
                                       child: CachedNetworkImage(
-                                        filterQuality: FilterQuality.medium,
+                                        cacheManager: CacheManager(Config(
+                                            maxNrOfCacheObjects: 20,
+                                            "Featured",
+                                            stalePeriod:
+                                                const Duration(days: 4))),
+                                        filterQuality: FilterQuality.low,
                                         imageUrl: walls[index]["link"],
                                         imageBuilder: (ctx, imageProvider) =>
                                             Container(
@@ -429,6 +435,13 @@ class _FeaturedState extends State<Featured> {
                                                 },
                                                 blendMode: BlendMode.darken,
                                                 child: CachedNetworkImage(
+                                                  cacheManager: CacheManager(
+                                                      Config("Featured",
+                                                          maxNrOfCacheObjects:
+                                                              30,
+                                                          stalePeriod:
+                                                              const Duration(
+                                                                  days: 4))),
                                                   filterQuality:
                                                       FilterQuality.medium,
                                                   imageUrl: walls[index]

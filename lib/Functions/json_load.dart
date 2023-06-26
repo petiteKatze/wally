@@ -119,19 +119,22 @@ class FileManager {
     if (status == PermissionStatus.denied) {
       Permission.storage.request();
     }
+    //fuck it user har bar mobile data kharcha karega, nahi chhaiye savings
     final path = await _directoryPath;
+    final response = await dio.get("$apiLink/catagory/$catName");
+    var newFile = await File('$path/Walldata/catagory/$catName.json')
+        .create(recursive: true);
+    await newFile.delete();
+    await newFile.writeAsBytes(utf8.encode(jsonEncode(response.data)));
     var presentFile = File('$path/Walldata/catagory/$catName.json');
-    if (await presentFile.exists()) {
-      final data = jsonDecode(utf8.decode(presentFile.readAsBytesSync()));
-      return data;
-    } else {
-      final response = await dio.get("$apiLink/catagory/$catName");
-      var newFile = await File('$path/Walldata/catagory/$catName.json')
-          .create(recursive: true);
-      await newFile.delete();
-      await newFile.writeAsBytes(utf8.encode(jsonEncode(response.data)));
-      return getCatagory(catName);
-    }
+    final data = jsonDecode(utf8.decode(presentFile.readAsBytesSync()));
+    Fluttertoast.showToast(
+        msg: "Loading walls",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        timeInSecForIosWeb: 1,
+        fontSize: 16.0);
+    return data;
   }
 
   Future appInitCheck() async {
@@ -165,6 +168,13 @@ class FileManager {
             .timeout(const Duration(seconds: 30));
 
         if (int.parse(res.toString()) > shouldDownload["version"]) {
+          Fluttertoast.showToast(
+              msg: "New wallpapers loading !",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.SNACKBAR,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
+
           await writeFile("initState", "/prState");
           await writeFile("catagoryData", "/ctData");
           await writeFile("allWalls", "/all");

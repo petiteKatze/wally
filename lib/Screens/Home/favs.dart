@@ -1,5 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
@@ -121,6 +122,10 @@ class _FavsState extends State<Favs> {
                                   },
                                   blendMode: BlendMode.darken,
                                   child: CachedNetworkImage(
+                                    cacheManager: CacheManager(Config(
+                                        "Featured",
+                                        maxNrOfCacheObjects: 10,
+                                        stalePeriod: const Duration(days: 10))),
                                     filterQuality: FilterQuality.medium,
                                     imageUrl: walls[idx]["link"],
                                     imageBuilder: (ctx, imageProvider) =>
@@ -308,6 +313,11 @@ class _FavsState extends State<Favs> {
                                         },
                                         blendMode: BlendMode.darken,
                                         child: CachedNetworkImage(
+                                          cacheManager: CacheManager(Config(
+                                              "Featured",
+                                              maxNrOfCacheObjects: 10,
+                                              stalePeriod:
+                                                  const Duration(days: 10))),
                                           filterQuality: FilterQuality.medium,
                                           imageUrl: walls[idx]["link"],
                                           imageBuilder: (ctx, imageProvider) =>
