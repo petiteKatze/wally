@@ -28,7 +28,9 @@ class NavState extends State<Nav> {
             ? const Color(0xFFA040B0)
             : widget.activeIndex == 1
                 ? const Color(0xFFAC5A37)
-                : const Color(0xFFAC3753),
+                : widget.activeIndex == 2
+                    ? const Color(0xFFAC3753)
+                    : const Color(0xFFF7C351),
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(
@@ -78,6 +80,22 @@ class NavState extends State<Nav> {
                     : PhosphorIcons.regular.heart,
                 size: widget.activeIndex == 2 ? 25 : 20,
                 color: widget.activeIndex == 2 ? Colors.white : Colors.black54,
+                semanticLabel: 'Favorites',
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 68,
+            child: InkWell(
+              onTap: () {
+                widget.onIndexChanged(3); // Call the callback function
+              },
+              child: PhosphorIcon(
+                widget.activeIndex == 3
+                    ? PhosphorIcons.fill.gear
+                    : PhosphorIcons.regular.gear,
+                size: widget.activeIndex == 3 ? 25 : 20,
+                color: widget.activeIndex == 3 ? Colors.white : Colors.black54,
                 semanticLabel: 'Favorites',
               ),
             ),

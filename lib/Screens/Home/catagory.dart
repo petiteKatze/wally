@@ -14,8 +14,10 @@ class Catagory extends StatefulWidget {
 
 class _CatagoryState extends State<Catagory> {
   List<dynamic> cats = [];
+  num tapIndex = -1;
   @override
   void initState() {
+    tapIndex = -1;
     getCats();
     super.initState();
   }
@@ -77,8 +79,15 @@ class _CatagoryState extends State<Catagory> {
                         child: InkWell(
                           key: ValueKey('$index' "catagory"),
                           onTap: () async {
+                            setState(() {
+                              tapIndex = index;
+                            });
                             List<dynamic> passFiles = await FileManager()
                                 .getCatagory(cats[index]["type"]);
+
+                            setState(() {
+                              tapIndex = -1;
+                            });
                             // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
@@ -88,57 +97,70 @@ class _CatagoryState extends State<Catagory> {
                                           useFile: passFiles,
                                         ))));
                           },
-                          child: Stack(children: <Widget>[
-                            CachedNetworkImage(
-                              filterQuality: FilterQuality.medium,
-                              imageUrl: cats[index]["image"],
-                              imageBuilder: (ctx, imageProvider) => Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
+                          child: Opacity(
+                            opacity: tapIndex == -1
+                                ? 1
+                                : tapIndex == index
+                                    ? 1
+                                    : 0.5,
+                            child: Stack(children: <Widget>[
+                              CachedNetworkImage(
+                                filterQuality: FilterQuality.medium,
+                                imageUrl: cats[index]["image"],
+                                imageBuilder: (ctx, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
+                                placeholder: (ctx, url) => Container(
+                                  color: Colors.white,
+                                  alignment: Alignment.center,
+                                  child: LoadingAnimationWidget.discreteCircle(
+                                      size: 20, color: Colors.white),
+                                ),
                               ),
-                              placeholder: (ctx, url) => Container(
-                                color: Colors.white,
-                                alignment: Alignment.center,
-                                child: LoadingAnimationWidget.discreteCircle(
-                                    size: 20, color: Colors.white),
-                              ),
-                            ),
-                            Positioned(
-                                bottom: 0,
-                                left: 5,
-                                right: 0,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 8),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        cats[index]["type"].toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        "${cats[index]["total"].toString()} Wallpapers",
-                                        style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300),
-                                      )
-                                    ],
-                                  ),
-                                ))
-                          ]),
+                              Positioned(
+                                  bottom: 0,
+                                  left: 5,
+                                  right: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          cats[index]["type"].toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          "${cats[index]["total"].toString()} Wallpapers",
+                                          style: const TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                              tapIndex == index
+                                  ? Center(
+                                      child:
+                                          LoadingAnimationWidget.discreteCircle(
+                                              size: 20, color: Colors.white))
+                                  : const SizedBox(),
+                            ]),
+                          ),
                         ),
                       ),
                       childCount: cats.length,

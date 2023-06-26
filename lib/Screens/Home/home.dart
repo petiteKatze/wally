@@ -4,6 +4,7 @@ import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:wally/Screens/Home/catagory.dart';
 import 'package:wally/Screens/Home/favs.dart';
 import 'package:wally/Screens/Home/featured.dart';
+import 'package:wally/Screens/Home/settings.dart';
 
 import '../../widgets/nav.dart';
 
@@ -16,7 +17,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _activeIndex = 0;
-  final pages = <Widget>[const Featured(), const Catagory(), const Favs()];
+  final pages = <Widget>[
+    const Featured(),
+    const Catagory(),
+    const Favs(),
+    const Settings()
+  ];
 
   @override
   Widget build(BuildContext context) {
