@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:wally/Screens/Splash/splash_screen.dart';
+import 'package:wally/utils/config.dart';
+import 'package:wally/utils/themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,16 +10,30 @@ void main() {
   runApp(const AppBegin());
 }
 
-class AppBegin extends StatelessWidget {
+class AppBegin extends StatefulWidget {
   const AppBegin({super.key});
+
+  @override
+  State<AppBegin> createState() => _AppBeginState();
+}
+
+class _AppBeginState extends State<AppBegin> {
+  @override
+  void initState() {
+    super.initState();
+    currentTheme.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          useMaterial3: true, textTheme: GoogleFonts.karlaTextTheme()),
+      darkTheme: AppTheme.dark,
+      theme: AppTheme.light,
       home: const SplashScreen(),
+      themeMode: currentTheme.currentTheme(),
     );
   }
 }

@@ -1,9 +1,11 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter_svg/svg.dart";
 import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:wally/Screens/col_walls.dart";
 
 import "../../Functions/json_load.dart";
+import "../../utils/themes.dart";
 
 class Catagory extends StatefulWidget {
   const Catagory({super.key});
@@ -24,28 +26,34 @@ class _CatagoryState extends State<Catagory> {
 
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return MediaQuery.of(context).size.width < 900
         ? CustomScrollView(
             slivers: [
               SliverAppBar(
-                leading: const SizedBox(),
-                stretch: true,
-                elevation: 0,
-                pinned: false,
-                centerTitle: true,
-                expandedHeight:
-                    MediaQuery.of(context).size.width > 700 ? 600 : 300,
-                flexibleSpace: FlexibleSpaceBar(
+                  leading: const SizedBox(),
+                  stretch: true,
+                  elevation: 0,
+                  pinned: false,
+                  centerTitle: true,
+                  expandedHeight:
+                      MediaQuery.of(context).size.width > 700 ? 600 : 300,
+                  flexibleSpace: FlexibleSpaceBar(
                     centerTitle: true,
-                    background: Image.asset(
-                      "lib/assets/backgrounds/catagory.png",
+                    background: SvgPicture.asset(
+                      "lib/assets/backgrounds/catagory.svg",
+                      colorFilter: brightness == "Brightness.dark"
+                          ? const ColorFilter.mode(
+                              Color.fromARGB(68, 0, 0, 0), BlendMode.luminosity)
+                          : const ColorFilter.mode(
+                              Color.fromARGB(0, 0, 0, 0), BlendMode.darken),
                       fit: BoxFit.cover,
-                      alignment: Alignment.bottomCenter,
-                    )),
-              ),
-              const SliverPadding(
-                key: ValueKey("Wally heading homepage"),
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    ),
+                  )),
+              SliverPadding(
+                key: const ValueKey("Wally heading homepage"),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
                     child: Column(
@@ -57,14 +65,20 @@ class _CatagoryState extends State<Catagory> {
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
+                            color: brightness == "Brightness.light"
+                                ? AppColors.textLight
+                                : AppColors.textDark,
                           ),
                         ),
                         Text(
                           "Check out our latest collections ",
                           style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black87),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w300,
+                            color: brightness == "Brightness.light"
+                                ? AppColors.textLight.withOpacity(0.7)
+                                : AppColors.textDark.withOpacity(0.8),
+                          ),
                         )
                       ],
                     ),
@@ -104,23 +118,43 @@ class _CatagoryState extends State<Catagory> {
                                     ? 1
                                     : 0.5,
                             child: Stack(children: <Widget>[
-                              CachedNetworkImage(
-                                filterQuality: FilterQuality.medium,
-                                imageUrl: cats[index]["image"],
-                                imageBuilder: (ctx, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+                              ShaderMask(
+                                shaderCallback: (rect) {
+                                  return const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Color.fromARGB(113, 0, 0, 0)
+                                    ],
+                                  ).createShader(Rect.fromLTRB(
+                                      0, -140, rect.width, rect.height - 20));
+                                },
+                                blendMode: BlendMode.darken,
+                                child: CachedNetworkImage(
+                                  filterQuality: FilterQuality.medium,
+                                  imageUrl: cats[index]["image"],
+                                  imageBuilder: (ctx, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                placeholder: (ctx, url) => Container(
-                                  color: Colors.white,
-                                  alignment: Alignment.center,
-                                  child: LoadingAnimationWidget.discreteCircle(
-                                      size: 20, color: Colors.white),
+                                  placeholder: (ctx, url) => Container(
+                                    color: brightness == "Brightness.light"
+                                        ? AppColors.scaffoldLight
+                                        : AppColors.scaffoldDark,
+                                    alignment: Alignment.center,
+                                    child:
+                                        LoadingAnimationWidget.discreteCircle(
+                                            size: 20, color: Colors.white),
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -146,7 +180,7 @@ class _CatagoryState extends State<Catagory> {
                                         Text(
                                           "${cats[index]["total"].toString()} Wallpapers",
                                           style: const TextStyle(
-                                              color: Colors.black87,
+                                              color: Colors.white70,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w300),
                                         )
@@ -180,13 +214,18 @@ class _CatagoryState extends State<Catagory> {
         : Row(
             children: [
               SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  height: MediaQuery.of(context).size.height,
-                  child: Image.asset(
-                    "lib/assets/backgrounds/catagory.png",
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                  )),
+                width: MediaQuery.of(context).size.width * 0.45,
+                height: MediaQuery.of(context).size.height,
+                child: SvgPicture.asset(
+                  "lib/assets/backgrounds/catagory.svg",
+                  colorFilter: brightness == "Brightness.dark"
+                      ? const ColorFilter.mode(
+                          Color.fromARGB(68, 0, 0, 0), BlendMode.luminosity)
+                      : const ColorFilter.mode(
+                          Color.fromARGB(0, 0, 0, 0), BlendMode.darken),
+                  fit: BoxFit.cover,
+                ),
+              ),
               Expanded(
                   child: CustomScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -253,7 +292,9 @@ class _CatagoryState extends State<Catagory> {
                                     ),
                                   ),
                                   placeholder: (ctx, url) => Container(
-                                      color: Colors.white,
+                                      color: brightness == "Brightness.light"
+                                          ? AppColors.scaffoldLight
+                                          : AppColors.scaffoldDark,
                                       alignment: Alignment.center,
                                       child:
                                           LoadingAnimationWidget.discreteCircle(

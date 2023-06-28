@@ -5,6 +5,7 @@ import 'package:wally/Screens/Home/catagory.dart';
 import 'package:wally/Screens/Home/favs.dart';
 import 'package:wally/Screens/Home/featured.dart';
 import 'package:wally/Screens/Home/settings.dart';
+import 'package:wally/utils/themes.dart';
 
 import '../../widgets/nav.dart';
 
@@ -26,7 +27,11 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return Scaffold(
+      backgroundColor: brightness == "Brightness.light"
+          ? AppColors.scaffoldLight
+          : AppColors.scaffoldDark,
       body: pages[_activeIndex],
       extendBody: true,
       bottomNavigationBar: SafeArea(

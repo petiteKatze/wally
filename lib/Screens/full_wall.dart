@@ -8,8 +8,11 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:fluttertoast/fluttertoast.dart";
+import "package:material_dialogs/dialogs.dart";
+import "package:material_dialogs/widgets/buttons/icon_outline_button.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Screens/Home/home.dart";
+import "package:wally/utils/themes.dart";
 
 import "../Functions/json_load.dart";
 
@@ -52,6 +55,7 @@ class _FullScreenState extends State<FullScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -108,7 +112,9 @@ class _FullScreenState extends State<FullScreen> {
                               ),
                             )
                           ],
-                          color: Colors.white,
+                          color: brightness == "Brightness.light"
+                              ? AppColors.scaffoldLight
+                              : AppColors.scaffoldDark,
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20))),
@@ -156,16 +162,25 @@ class _FullScreenState extends State<FullScreen> {
                                           children: [
                                             Text(
                                               widget.name.toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                                color: brightness ==
+                                                        "Brightness.light"
+                                                    ? AppColors.textLight
+                                                    : AppColors.textDark,
+                                              ),
                                             ),
                                             Text(
                                               widget.desc.toString(),
                                               maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   fontSize: 12,
+                                                  color: brightness ==
+                                                          "Brightness.light"
+                                                      ? AppColors.textLight
+                                                      : AppColors.textDark,
                                                   overflow:
                                                       TextOverflow.ellipsis),
                                             )
@@ -207,11 +222,18 @@ class _FullScreenState extends State<FullScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 2),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 2),
                                         child: Text(
                                           "Variants",
                                           textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            color:
+                                                brightness == "Brightness.light"
+                                                    ? AppColors.textLight
+                                                    : AppColors.textDark,
+                                          ),
                                         ),
                                       ),
                                       widget.variants.isNotEmpty
@@ -251,15 +273,24 @@ class _FullScreenState extends State<FullScreen> {
                                                           decoration:
                                                               BoxDecoration(
                                                             border: Border.all(
-                                                                width: selectedVariant ==
-                                                                        widget
-                                                                            .variants
-                                                                            .indexOf(
-                                                                                i)
-                                                                    ? 2
-                                                                    : 0.5,
-                                                                color: Colors
-                                                                    .black54),
+                                                              width: selectedVariant ==
+                                                                      widget
+                                                                          .variants
+                                                                          .indexOf(
+                                                                              i)
+                                                                  ? 2
+                                                                  : 0.5,
+                                                              color: brightness ==
+                                                                      "Brightness.light"
+                                                                  ? AppColors
+                                                                      .textLight
+                                                                      .withOpacity(
+                                                                          0.5)
+                                                                  : AppColors
+                                                                      .textDark
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                            ),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -274,7 +305,15 @@ class _FullScreenState extends State<FullScreen> {
                                                   )
                                               ],
                                             )
-                                          : const Text("No variants available"),
+                                          : Text(
+                                              "No variants available",
+                                              style: TextStyle(
+                                                color: brightness ==
+                                                        "Brightness.light"
+                                                    ? AppColors.textLight
+                                                    : AppColors.textDark,
+                                              ),
+                                            ),
                                       const SizedBox(
                                         height: 15,
                                       ),
@@ -287,7 +326,15 @@ class _FullScreenState extends State<FullScreen> {
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 4),
-                                                child: Text('#${j.toString()}'),
+                                                child: Text(
+                                                  '#${j.toString()}',
+                                                  style: TextStyle(
+                                                    color: brightness ==
+                                                            "Brightness.light"
+                                                        ? AppColors.textLight
+                                                        : AppColors.textDark,
+                                                  ),
+                                                ),
                                               )
                                           ],
                                         ),
@@ -300,68 +347,71 @@ class _FullScreenState extends State<FullScreen> {
                                                 : 0,
                                       ),
                                       InkWell(
+                                        splashColor: Colors.grey,
+                                        enableFeedback: true,
                                         onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (ctx) =>
-                                                  CupertinoAlertDialog(
-                                                    title: const Text(
-                                                        "Set Wallpaper"),
-                                                    content: const Text(
-                                                        "In the next screen you will get a prompt to set the wallpaper. Also you can download the wallpaper"),
-                                                    actions: [
-                                                      CupertinoDialogAction(
-                                                        child: const Text(
-                                                            "Set Wallpaper"),
-                                                        onPressed: () async {
-                                                          var file =
-                                                              await DefaultCacheManager()
-                                                                  .getSingleFile(
-                                                                      disImage);
+                                          Dialogs.materialDialog(
+                                              msg:
+                                                  "Go ahead and apply the wallpaper for your device, you can set it for the home screen and lockscreen as per as your device on the next screen. ",
+                                              title: "Set Wallpaper",
+                                              actions: [
+                                                IconsOutlineButton(
+                                                  iconData: Icons.check,
+                                                  text: "Go ahead",
+                                                  onPressed: () async {
+                                                    var file =
+                                                        await DefaultCacheManager()
+                                                            .getSingleFile(
+                                                                disImage);
 
-                                                          try {
-                                                            await AsyncWallpaper
-                                                                .setWallpaperFromFileNative(
-                                                              goToHome: true,
-                                                              filePath:
-                                                                  file.path,
-                                                            );
-                                                          } on PlatformException {
-                                                            Fluttertoast.showToast(
-                                                                msg:
-                                                                    "Sorry, Try again",
-                                                                toastLength: Toast
-                                                                    .LENGTH_SHORT,
-                                                                gravity:
-                                                                    ToastGravity
-                                                                        .SNACKBAR,
-                                                                timeInSecForIosWeb:
-                                                                    1,
-                                                                backgroundColor:
-                                                                    Colors.red,
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16.0);
-                                                          }
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ));
+                                                    try {
+                                                      await AsyncWallpaper
+                                                          .setWallpaperFromFileNative(
+                                                        goToHome: true,
+                                                        filePath: file.path,
+                                                      );
+                                                    } on PlatformException {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Sorry, Try again",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .SNACKBAR,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0);
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                              context: context);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              color: Colors.black),
-                                          child: const Center(
+                                            color:
+                                                brightness == "Brightness.light"
+                                                    ? AppColors.textLight
+                                                    : AppColors.textDark,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Center(
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 15),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 15),
                                               child: Text(
                                                 "Set Wallpaper",
                                                 style: TextStyle(
-                                                    color: Colors.white),
+                                                  color: brightness ==
+                                                          "Brightness.dark"
+                                                      ? AppColors.textLight
+                                                      : AppColors.textDark,
+                                                ),
                                               ),
                                             ),
                                           ),

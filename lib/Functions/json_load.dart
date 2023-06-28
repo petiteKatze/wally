@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
   final String apiLink = "https://drab-erin-moose-ring.cyclic.app";
@@ -13,23 +12,14 @@ class FileManager {
   final dio = Dio();
 
   Future<String?> get _directoryPath async {
-    Directory? directory = await getExternalStorageDirectory();
-    return directory?.path;
+    Directory? directory = await getTemporaryDirectory();
+    return directory.path;
   }
 
   // write files after downloading
   Future writeFile(String fileName, String apiPath) async {
-    var status = await Permission.storage.request();
-
-    if (status == PermissionStatus.denied) {
-      Permission.storage.request();
-    }
     final response =
         await dio.get("$apiLink/$apiPath").timeout(const Duration(seconds: 45));
-
-    if (kDebugMode) {
-      print(response.data);
-    }
 
     final path = await _directoryPath;
 
@@ -44,10 +34,6 @@ class FileManager {
 
     if (toLike == false) {
       var temp = [];
-      var status = await Permission.storage.request();
-      if (status == PermissionStatus.denied) {
-        exit(1);
-      }
       final path = await _directoryPath;
       var filePres = await readFile("likedItems");
 
@@ -64,18 +50,11 @@ class FileManager {
         newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
       }
     } else {
-      var status = await Permission.storage.request();
-      if (status == PermissionStatus.denied) {
-        Permission.storage.request();
-      }
       final path = await _directoryPath;
       var filePres = await readFile("likedItems");
       filePres.removeWhere((ele) => ele["id"] == data["id"]);
       final newFile = File('$path/Walldata/likedItems.json');
       newFile.writeAsBytesSync(utf8.encode(jsonEncode(filePres)));
-      if (kDebugMode) {
-        print("deleted");
-      }
     }
   }
 
@@ -100,10 +79,6 @@ class FileManager {
 
   // reads file
   readFile(String fileName) async {
-    var status = await Permission.storage.request();
-    if (status == PermissionStatus.denied) {
-      Permission.storage.request();
-    }
     final path = await _directoryPath;
     var presentFile = File('$path/Walldata/$fileName.json');
     if (await presentFile.exists()) {
@@ -115,10 +90,6 @@ class FileManager {
   }
 
   getCatagory(String catName) async {
-    var status = await Permission.storage.request();
-    if (status == PermissionStatus.denied) {
-      Permission.storage.request();
-    }
     //fuck it user har bar mobile data kharcha karega, nahi chhaiye savings
     final path = await _directoryPath;
     final response = await dio.get("$apiLink/catagory/$catName");
@@ -138,10 +109,6 @@ class FileManager {
   }
 
   Future appInitCheck() async {
-    var status = await Permission.storage.request();
-    if (status == PermissionStatus.denied) {
-      Permission.storage.request();
-    }
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {

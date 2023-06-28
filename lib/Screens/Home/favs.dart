@@ -1,11 +1,14 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:flutter_cache_manager/flutter_cache_manager.dart";
+import "package:flutter_svg/svg.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
 import "package:wally/Functions/json_load.dart";
 import "package:wally/Screens/full_wall.dart";
+
+import "../../utils/themes.dart";
 
 class Favs extends StatefulWidget {
   const Favs({super.key});
@@ -24,8 +27,11 @@ class _FavsState extends State<Favs> {
 
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return MediaQuery.of(context).size.width < 900
         ? CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            key: const ValueKey("Favorites"),
             slivers: [
               SliverAppBar(
                 leading: const SizedBox(),
@@ -36,15 +42,21 @@ class _FavsState extends State<Favs> {
                 expandedHeight:
                     MediaQuery.of(context).size.width > 700 ? 600 : 300,
                 flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    background: Image.asset(
-                      "lib/assets/backgrounds/liked.png",
-                      fit: BoxFit.cover,
-                      alignment: Alignment.bottomCenter,
-                    )),
+                  centerTitle: true,
+                  background: SvgPicture.asset(
+                    "lib/assets/backgrounds/liked.svg",
+                    colorFilter: brightness == "Brightness.dark"
+                        ? const ColorFilter.mode(
+                            Color.fromARGB(68, 0, 0, 0), BlendMode.luminosity)
+                        : const ColorFilter.mode(
+                            Color.fromARGB(0, 0, 0, 0), BlendMode.darken),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              const SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              SliverPadding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                 sliver: SliverToBoxAdapter(
                   child: SizedBox(
                     child: Column(
@@ -56,14 +68,20 @@ class _FavsState extends State<Favs> {
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
+                            color: brightness == "Brightness.light"
+                                ? AppColors.textLight
+                                : AppColors.textDark,
                           ),
                         ),
                         Text(
                           "All those you liked :)",
                           style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black87),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w300,
+                            color: brightness == "Brightness.light"
+                                ? AppColors.textLight.withOpacity(0.7)
+                                : AppColors.textDark.withOpacity(0.8),
+                          ),
                         )
                       ],
                     ),
@@ -84,7 +102,7 @@ class _FavsState extends State<Favs> {
                                 MediaQuery.of(context).size.width > 600
                                     ? 15
                                     : 8,
-                            childAspectRatio: 3 / 4,
+                            childAspectRatio: 9 / 16,
                             crossAxisCount:
                                 MediaQuery.of(context).size.width > 600
                                     ? 3
@@ -188,31 +206,50 @@ class _FavsState extends State<Favs> {
                   : SliverToBoxAdapter(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.4,
-                        child: const Opacity(
+                        child: Opacity(
                           opacity: 0.5,
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.cancel),
-                                Text("No wallpapers here"),
+                                const Icon(Icons.cancel),
+                                Text(
+                                  "No wallpapers here",
+                                  style: TextStyle(
+                                    color: brightness == "Brightness.light"
+                                        ? AppColors.textLight
+                                        : AppColors.textDark,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
                     ),
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: Column(
                     children: [
                       Text(
                         "Made with ❤️ by Diptanshu Mahish",
-                        style: TextStyle(fontSize: 25),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: brightness == "Brightness.light"
+                              ? AppColors.textLight
+                              : AppColors.textDark,
+                        ),
                       ),
                       Text(
-                          "This is the first release version of the app, more versions and imporvements coming soon, with many more new wallpapers, till then peace :)")
+                        "Hey there hope you loved Wally ^^ . Keep exploring the app and sharing among your friends and peers. Peace :)",
+                        style: TextStyle(
+                          color: brightness == "Brightness.light"
+                              ? AppColors.textLight
+                              : AppColors.textDark,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -230,10 +267,14 @@ class _FavsState extends State<Favs> {
                   key: const ValueKey("Favorites Tablet View"),
                   width: MediaQuery.of(context).size.width * 0.45,
                   height: MediaQuery.of(context).size.height,
-                  child: Image.asset(
-                    "lib/assets/backgrounds/liked.png",
+                  child: SvgPicture.asset(
+                    "lib/assets/backgrounds/liked.svg",
+                    colorFilter: brightness == "Brightness.dark"
+                        ? const ColorFilter.mode(
+                            Color.fromARGB(68, 0, 0, 0), BlendMode.luminosity)
+                        : const ColorFilter.mode(
+                            Color.fromARGB(0, 0, 0, 0), BlendMode.darken),
                     fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
                   )),
               Expanded(
                   child: CustomScrollView(

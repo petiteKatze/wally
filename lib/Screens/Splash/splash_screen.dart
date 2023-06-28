@@ -21,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -29,19 +30,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 ? "lib/assets/backgrounds/splash_screen.svg"
                 : "lib/assets/backgrounds/wideSplas.svg",
             fit: BoxFit.cover,
+            colorFilter: brightness == "Brightness.dark"
+                ? const ColorFilter.mode(
+                    Color.fromARGB(68, 0, 0, 0), BlendMode.luminosity)
+                : const ColorFilter.mode(
+                    Color.fromARGB(0, 0, 0, 0), BlendMode.darken),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-          ),
-          Opacity(
-            opacity: 0.4,
-            child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("lib/assets/backgrounds/noise.png")),
-                )),
           ),
           Center(
               child: Column(
@@ -57,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               LoadingAnimationWidget.inkDrop(
                 size: 20,
-                color: Colors.white,
+                color: Colors.black87,
               ),
             ],
           )),
@@ -65,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: MediaQuery.of(context).size.width,
               bottom: 40,
               child: Text(
-                "version 1.0.0",
+                "version 3.0.0",
                 style: TextStyle(color: Colors.white.withOpacity(0.6)),
                 textAlign: TextAlign.center,
               ))

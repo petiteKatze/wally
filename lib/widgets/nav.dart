@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:wally/utils/themes.dart';
 
 class Nav extends StatefulWidget {
   final Function(int) onIndexChanged; // New callback function
@@ -18,19 +19,28 @@ class Nav extends StatefulWidget {
 class NavState extends State<Nav> {
   @override
   Widget build(BuildContext context) {
+    String brightness = Theme.of(context).brightness.toString();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.25, vertical: 15),
+          horizontal: MediaQuery.of(context).size.width * 0.22, vertical: 15),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        border: Border.all(color: Colors.black45),
         color: widget.activeIndex == 0
-            ? const Color(0xFFA040B0)
+            ? brightness == "Brightness.light"
+                ? AppColors.featuredLight
+                : AppColors.featuredDark
             : widget.activeIndex == 1
-                ? const Color(0xFFAC5A37)
+                ? brightness == "Brightness.light"
+                    ? AppColors.catLight
+                    : AppColors.catDark
                 : widget.activeIndex == 2
-                    ? const Color(0xFFAC3753)
-                    : const Color(0xFFF7C351),
+                    ? brightness == "Brightness.light"
+                        ? AppColors.likeLight
+                        : AppColors.likeDark
+                    : brightness == "Brightness.light"
+                        ? AppColors.setLight
+                        : AppColors.setDark,
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(
@@ -47,7 +57,8 @@ class NavState extends State<Nav> {
                     ? PhosphorIcons.fill.houseLine
                     : PhosphorIcons.regular.houseLine,
                 size: widget.activeIndex == 0 ? 25 : 20,
-                color: widget.activeIndex == 0 ? Colors.white : Colors.black54,
+                color:
+                    widget.activeIndex == 0 ? Colors.black87 : Colors.black54,
                 semanticLabel: 'Home',
               ),
             ),
@@ -63,7 +74,8 @@ class NavState extends State<Nav> {
                     ? PhosphorIcons.fill.gridFour
                     : PhosphorIcons.regular.gridFour,
                 size: widget.activeIndex == 1 ? 25 : 20,
-                color: widget.activeIndex == 1 ? Colors.white : Colors.black54,
+                color:
+                    widget.activeIndex == 1 ? Colors.black87 : Colors.black54,
                 semanticLabel: 'Category',
               ),
             ),
@@ -79,7 +91,8 @@ class NavState extends State<Nav> {
                     ? PhosphorIcons.fill.heart
                     : PhosphorIcons.regular.heart,
                 size: widget.activeIndex == 2 ? 25 : 20,
-                color: widget.activeIndex == 2 ? Colors.white : Colors.black54,
+                color:
+                    widget.activeIndex == 2 ? Colors.black87 : Colors.black54,
                 semanticLabel: 'Favorites',
               ),
             ),
@@ -95,7 +108,8 @@ class NavState extends State<Nav> {
                     ? PhosphorIcons.fill.gear
                     : PhosphorIcons.regular.gear,
                 size: widget.activeIndex == 3 ? 25 : 20,
-                color: widget.activeIndex == 3 ? Colors.white : Colors.black54,
+                color:
+                    widget.activeIndex == 3 ? Colors.black87 : Colors.black54,
                 semanticLabel: 'Favorites',
               ),
             ),

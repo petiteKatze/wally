@@ -4,6 +4,7 @@ import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:flutter_vibrate/flutter_vibrate.dart";
 import "package:loading_animation_widget/loading_animation_widget.dart";
 import "package:phosphor_flutter/phosphor_flutter.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 import "../Functions/json_load.dart";
 import "full_wall.dart";
@@ -18,11 +19,14 @@ class Col extends StatefulWidget {
 }
 
 class _ColState extends State<Col> {
+  int mobColumns = 2;
+
   List<dynamic> likes = [];
 
   @override
   void initState() {
     getLikesList();
+    getColumnsNo();
     super.initState();
   }
 
@@ -38,11 +42,14 @@ class _ColState extends State<Col> {
                 padding: const EdgeInsets.all(15.0),
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 3 / 4,
+                      childAspectRatio: MediaQuery.of(context).size.width < 600
+                          ? 9 / 16
+                          : 3 / 4,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width < 600 ? 2 : 3),
+                      crossAxisCount: MediaQuery.of(context).size.width < 600
+                          ? mobColumns
+                          : 3),
                   itemBuilder: (ctx, index) {
                     return InkWell(
                       key: ValueKey('$index+ColumnCatagoryResults'),
@@ -167,5 +174,15 @@ class _ColState extends State<Col> {
     }
 
     return false;
+  }
+
+  getColumnsNo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? columns = prefs.getInt("mobColumns");
+    if (columns != null) {
+      setState(() {
+        mobColumns = columns;
+      });
+    }
   }
 }
